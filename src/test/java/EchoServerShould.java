@@ -15,14 +15,34 @@ public class EchoServerShould {
         EchoServer server = new EchoServer();
         server.run(1111);
 
-        Socket testClientSocket = new Socket("localhost", 1111);
-        PrintStream toServer = new PrintStream(testClientSocket.getOutputStream());
-        BufferedReader fromServer = new BufferedReader(new InputStreamReader(testClientSocket.getInputStream()));
+        Socket clientSocket = new Socket("localhost", 1111);
+        PrintStream toServer = new PrintStream(clientSocket.getOutputStream());
+        BufferedReader fromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
         toServer.println("Geronimo!");
         String response = fromServer.readLine();
 
         assertEquals("Geronimo!", response);
-        testClientSocket.close();
+        clientSocket.close();
+    }
+
+    @Test
+    public void pipeAMessageToOtherClients() throws IOException {
+        EchoServer server = new EchoServer();
+        server.run(1111);
+
+        Socket clientSocketOne = new Socket("localhost", 1111);
+        PrintStream toServerOne = new PrintStream(clientSocketOne.getOutputStream());
+        BufferedReader fromServerOne = new BufferedReader(new InputStreamReader(clientSocketOne.getInputStream()));
+
+        Socket clientSocketTwo = new Socket("localhost", 1111);
+        PrintStream toServerTwo = new PrintStream(clientSocketTwo.getOutputStream());
+        BufferedReader fromServerTwo = new BufferedReader(new InputStreamReader(clientSocketTwo.getInputStream()));
+
+        toServerOne.println("Anybody out there?");
+
+        assertEquals("someone messaged: Anybody out there?", fromServerTwo.readLine());
+        clientSocketOne.close();
+        clientSocketTwo.close();
     }
 }
