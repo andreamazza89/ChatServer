@@ -1,17 +1,27 @@
 package com.andreamazzarella.chat_server.support;
 
-import com.andreamazzarella.chat_server.ClientConnection;
+import com.andreamazzarella.chat_server.ClientSocket;
 
 import java.io.*;
 
-public class FakeClientSocket implements ClientConnection {
+public class FakeClientSocket implements ClientSocket {
 
     private OutputStream outputStream = new ByteArrayOutputStream();
-    private InputStream inputStream;
+    private PipedOutputStream pipedOutputStream;
+    private PipedInputStream pipedInputStream;
+
+    public FakeClientSocket() {
+        this.pipedOutputStream = new PipedOutputStream();
+        try {
+            this.pipedInputStream = new PipedInputStream(pipedOutputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public InputStream getInputStream() throws IOException {
-        return inputStream;
+        return pipedInputStream;
     }
 
     @Override
@@ -23,8 +33,12 @@ public class FakeClientSocket implements ClientConnection {
         return outputStream.toString();
     }
 
-    public void setMessage(String message) {
-        inputStream = new ByteArrayInputStream(message.getBytes());
+    public void newMessage(String message) {
+        try {
+            pipedOutputStream.write(message.getBytes());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
 }

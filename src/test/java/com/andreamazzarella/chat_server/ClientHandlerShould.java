@@ -1,10 +1,10 @@
 package com.andreamazzarella.chat_server;
 
 import com.andreamazzarella.chat_server.support.FakeClientSocket;
-import com.andreamazzarella.chat_server.support.FakeFIND_ME_A_GOOD_NAME;
+import com.andreamazzarella.chat_server.support.FakeChatRoom;
 import org.junit.Test;
 
-import java.io.IOException;
+import java.io.*;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -14,7 +14,7 @@ public class ClientHandlerShould {
     @Test
     public void forwardAMessageToTheClient() throws IOException {
         FakeClientSocket clientSocket = new FakeClientSocket();
-        ClientHandler clientHandler = new ClientHandler(clientSocket, new FakeFIND_ME_A_GOOD_NAME());
+        MessageExchanger clientHandler = new MessageExchanger(clientSocket, new FakeChatRoom());
 
         clientHandler.forward("sample line one");
         clientHandler.forward("sample line two");
@@ -23,16 +23,42 @@ public class ClientHandlerShould {
     }
 
     @Test
-    public void notifyTheServerWhenItReceivesAMessageFromTheClient() throws IOException {
+    public void notifyTheServerWhenItReceivesAMessageFromTheClient() throws IOException, InterruptedException {
         FakeClientSocket clientSocket = new FakeClientSocket();
-        clientSocket.setMessage("test message");
 
-        FakeFIND_ME_A_GOOD_NAME fIND_A_GOOD_NAME_FOR_THIS_PLEASE = new FakeFIND_ME_A_GOOD_NAME();
-        ClientHandler clientHandler = new ClientHandler(clientSocket, fIND_A_GOOD_NAME_FOR_THIS_PLEASE);
+        FakeChatRoom fakeChatRoom = new FakeChatRoom();
+        MessageExchanger messageExchanger = new MessageExchanger(clientSocket, fakeChatRoom);
 
-        clientHandler.start();
+        messageExchanger.run();
+        clientSocket.newMessage("test message\n");
 
-        assertThat(fIND_A_GOOD_NAME_FOR_THIS_PLEASE.receivedMessage()).isEqualTo("test message");
-        assertThat(fIND_A_GOOD_NAME_FOR_THIS_PLEASE.sentBy()).isEqualTo(clientSocket);
+        while (!fakeChatRoom.messageWasReceived) {
+            Thread.sleep(1);
+        }
+
+        assertThat(fakeChatRoom.receivedMessage()).isEqualTo("test message");
+        assertThat(fakeChatRoom.sentBy()).isEqualTo(clientSocket);
+    }
+
+    @Test
+    public void beAbleToBothReceiveAndSendMessages() throws InterruptedException, IOException {
+        FakeClientSocket clientSocket = new FakeClientSocket();
+        FakeChatRoom fakeChatRoom = new FakeChatRoom();
+
+        MessageExchanger messageExchanger = new MessageExchanger(clientSocket, fakeChatRoom);
+
+        messageExchanger.run();
+        messageExchanger.forward("sample line one");
+        clientSocket.newMessage("test message\n");
+
+        while (!fakeChatRoom.messageWasReceived) {
+            Thread.sleep(1);
+        }
+
+        messageExchanger.forward("sample line two");
+
+        assertThat(clientSocket.receivedMessages()).isEqualTo("sample line one\nsample line two\n");
+        assertThat(fakeChatRoom.receivedMessage()).isEqualTo("test message");
+        assertThat(fakeChatRoom.sentBy()).isEqualTo(clientSocket);
     }
 }
