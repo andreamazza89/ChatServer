@@ -40,5 +40,4 @@ public class FakeClientSocket implements ClientSocket {
             throw new UncheckedIOException(e);
         }
     }
-
 }
