@@ -20,10 +20,21 @@ public class ChatRoomShould {
         chatRoom.addMessageExchanger(messageExchangerTwo);
         chatRoom.addMessageExchanger(messageExchangerThree);
 
-        chatRoom.messageFromClientNotification("Hello from Socket One!", messageExchangerOne);
+        chatRoom.notifyMessageFromClient("Hello from Socket One!", messageExchangerOne);
 
         assertThat(socketOne.receivedMessages()).isEqualTo("");
         assertThat(socketTwo.receivedMessages()).isEqualTo("Hello from Socket One!\n");
         assertThat(socketThree.receivedMessages()).isEqualTo("Hello from Socket One!\n");
+    }
+
+    @Test
+    public void provideAListOfConnectedClients() {
+        ChatRoom chatRoom = new ChatRoom();
+        FakeClientSocket socket = new FakeClientSocket();
+        MessageExchanger messageExchanger = new MessageExchanger(socket, chatRoom);
+
+        chatRoom.addMessageExchanger(messageExchanger);
+
+        assertThat(chatRoom.connectedClients().get(0)).isEqualTo(messageExchanger);
     }
 }

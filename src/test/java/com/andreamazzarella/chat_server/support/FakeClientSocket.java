@@ -3,6 +3,7 @@ package com.andreamazzarella.chat_server.support;
 import com.andreamazzarella.chat_server.ClientSocket;
 
 import java.io.*;
+import java.net.SocketAddress;
 
 public class FakeClientSocket implements ClientSocket {
 
@@ -22,6 +23,11 @@ public class FakeClientSocket implements ClientSocket {
     @Override
     public InputStream getInputStream() throws IOException {
         return pipedInputStream;
+    }
+
+    @Override
+    public void connect(SocketAddress serverAddress) throws IOException {
+        // pretend it just made a connection
     }
 
     @Override

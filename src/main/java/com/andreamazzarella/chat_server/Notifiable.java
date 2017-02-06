@@ -1,5 +1,8 @@
 package com.andreamazzarella.chat_server;
 
+import java.util.List;
+
 public interface Notifiable {
-    void messageFromClientNotification(String message, MessageExchanger clientConnection);
+    void notifyMessageFromClient(String message, MessageExchanger clientConnection);
+    List<MessageExchanger> connectedClients();
 }

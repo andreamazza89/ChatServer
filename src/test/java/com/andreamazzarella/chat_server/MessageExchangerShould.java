@@ -28,7 +28,6 @@ public class MessageExchangerShould {
         FakeChatRoom fakeChatRoom = new FakeChatRoom();
         MessageExchanger messageExchanger = new MessageExchanger(clientSocket, fakeChatRoom);
 
-        messageExchanger.run();
         clientSocket.newMessage("test message\n");
         while (!fakeChatRoom.messageWasReceived) {
             Thread.sleep(1);
@@ -44,7 +43,6 @@ public class MessageExchangerShould {
         FakeChatRoom fakeChatRoom = new FakeChatRoom();
         MessageExchanger messageExchanger = new MessageExchanger(clientSocket, fakeChatRoom);
 
-        messageExchanger.run();
         messageExchanger.forward("sample line one");
         clientSocket.newMessage("test message\n");
         messageExchanger.forward("sample line two");
