@@ -35,7 +35,7 @@ public class MessageExchangerShould {
         }
 
         assertThat(fakeChatRoom.receivedMessage()).isEqualTo("test message");
-        assertThat(fakeChatRoom.sentBy()).isEqualTo(clientSocket);
+        assertThat(fakeChatRoom.sentBy()).isEqualTo(messageExchanger);
     }
 
     @Test
@@ -54,6 +54,6 @@ public class MessageExchangerShould {
 
         assertThat(clientSocket.receivedMessages()).isEqualTo("sample line one\nsample line two\n");
         assertThat(fakeChatRoom.receivedMessage()).isEqualTo("test message");
-        assertThat(fakeChatRoom.sentBy()).isEqualTo(clientSocket);
+        assertThat(fakeChatRoom.sentBy()).isEqualTo(messageExchanger);
     }
 }

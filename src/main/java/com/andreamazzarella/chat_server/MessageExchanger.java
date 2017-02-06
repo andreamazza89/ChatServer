@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-class MessageExchanger {
+public class MessageExchanger {
     private final BufferedReader clientOutputStream;
     private final PrintStream clientInputStream;
     private final ClientSocket clientSocket;
@@ -32,7 +32,7 @@ class MessageExchanger {
             String message_received;
             try {
                 while ((message_received = clientOutputStream.readLine()) != null) {
-                    chatRoom.messageFromClientNotification(message_received, clientSocket);
+                    chatRoom.messageFromClientNotification(message_received, this);
                 }
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
