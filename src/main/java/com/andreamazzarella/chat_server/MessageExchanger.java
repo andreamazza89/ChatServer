@@ -12,6 +12,7 @@ public class MessageExchanger {
 
     MessageExchanger(ClientSocket clientSocket, Notifiable chatRoom) {
         this.chatRoom = chatRoom;
+
         try {
             clientInputStream = new PrintStream(clientSocket.getOutputStream());
             clientOutputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));

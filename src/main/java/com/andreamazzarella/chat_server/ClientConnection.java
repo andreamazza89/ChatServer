@@ -6,11 +6,11 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-public class RemoteSocket implements ClientSocket {
+public class ClientConnection implements ClientSocket {
 
     private final Socket rawClientSocket;
 
-    public RemoteSocket(Socket rawClientSocket) {
+    public ClientConnection(Socket rawClientSocket) {
         this.rawClientSocket = rawClientSocket;
     }
 
