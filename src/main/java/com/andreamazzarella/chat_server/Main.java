@@ -16,6 +16,7 @@ public class Main {
     }
 
     static void start(ChatRoom chatRoom, int portNumber) {
+        System.out.println("Server running on port " + portNumber);
         ExecutorService newConnectionThreadPool = Executors.newCachedThreadPool();
 
         while (true) {
