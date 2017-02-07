@@ -5,12 +5,12 @@ import java.util.List;
 
 public class ChatRoom implements Notifiable {
 
-    private List<MessageExchanger> clientsConnected = new ArrayList<>();
+    private List<MessageExchanger> exchangersSubscribedToRoom = new ArrayList<>();
 
     @Override
-    public void notifyMessageFromClient(String message, MessageExchanger messageSender) {
-        for (MessageExchanger messageExchanger : clientsConnected) {
-            if (messageExchanger != messageSender) {
+    public void notifyMessageFromClient(String message, MessageExchanger sender) {
+        for (MessageExchanger messageExchanger : exchangersSubscribedToRoom) {
+            if (messageExchanger != sender) {
                 messageExchanger.forward(message);
             }
         }
@@ -18,11 +18,11 @@ public class ChatRoom implements Notifiable {
 
     @Override
     public List<MessageExchanger> connectedClients() {
-        return clientsConnected;
+        return exchangersSubscribedToRoom;
     }
 
-    void addMessageExchanger(MessageExchanger messageExchanger) {
-        clientsConnected.add(messageExchanger);
+    void addSubscriber(MessageExchanger messageExchanger) {
+        exchangersSubscribedToRoom.add(messageExchanger);
     }
 
 }

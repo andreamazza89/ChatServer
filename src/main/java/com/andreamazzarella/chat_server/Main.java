@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
+
     public static void main(String[] args) {
         ChatRoom chatRoom = new ChatRoom();
         int portNumber = Integer.parseInt(args[0]);
@@ -17,16 +18,17 @@ public class Main {
 
     static void start(ChatRoom chatRoom, int portNumber) {
         System.out.println("Server running on port " + portNumber);
-        ExecutorService newConnectionThreadPool = Executors.newCachedThreadPool();
+        ExecutorService connections = Executors.newCachedThreadPool();
 
         while (true) {
-            try (
-                ServerSocket serverSocket = new ServerSocket(portNumber)
-            ) {
+            try (ServerSocket serverSocket = new ServerSocket(portNumber)) {
+
                 Socket rawSocket = serverSocket.accept();
-                newConnectionThreadPool.submit(() -> {
+
+                connections.submit(() -> {
                     MessageExchanger messageExchanger = new MessageExchanger(new ClientConnection(rawSocket), chatRoom);
-                    chatRoom.addMessageExchanger(messageExchanger);
+                    chatRoom.addSubscriber(messageExchanger);
+                    messageExchanger.startListening();
                 });
             } catch (IOException e) {
                 throw new UncheckedIOException(e);

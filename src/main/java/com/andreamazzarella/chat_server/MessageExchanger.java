@@ -1,8 +1,6 @@
 package com.andreamazzarella.chat_server;
 
 import java.io.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class MessageExchanger {
 
@@ -19,26 +17,20 @@ public class MessageExchanger {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-
-        this.start();
     }
 
     void forward(String message) {
         clientInputStream.println(message);
     }
 
-    private void start() {
-        ExecutorService messageListener = Executors.newSingleThreadExecutor();
-
-        messageListener.submit(() -> {
-            String message_received;
-            try {
-                while ((message_received = clientOutputStream.readLine()) != null) {
-                    chatRoom.notifyMessageFromClient(message_received, this);
-                }
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
+    void startListening() {
+        String message_received;
+        try {
+            while ((message_received = clientOutputStream.readLine()) != null) {
+                chatRoom.notifyMessageFromClient(message_received, this);
             }
-        });
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }

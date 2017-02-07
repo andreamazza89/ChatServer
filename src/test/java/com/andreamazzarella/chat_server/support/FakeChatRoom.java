@@ -5,15 +5,18 @@ import com.andreamazzarella.chat_server.Notifiable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class FakeChatRoom implements Notifiable {
     private String receivedMessage;
     private MessageExchanger clientConnection;
-    public boolean messageWasReceived = false;
+    private CountDownLatch waitForMessageNotification = new CountDownLatch(1);
 
     @Override
     public void notifyMessageFromClient(String message, MessageExchanger clientConnection) {
-        messageWasReceived = true;
+        waitForMessageNotification.countDown();
+
         this.receivedMessage = message;
         this.clientConnection = clientConnection;
     }
@@ -29,6 +32,16 @@ public class FakeChatRoom implements Notifiable {
 
     public MessageExchanger sentBy() {
         return clientConnection;
+    }
+
+    public void waitForMessageThen(long timeout, TimeUnit timeUnit, Runnable callback) {
+        try {
+            waitForMessageNotification.await(timeout, timeUnit);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        callback.run();
     }
 
 }

@@ -16,25 +16,26 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 public class Integration {
 
     @Test
-    public void twoClientsConnectAndChat() throws IOException, InterruptedException, ExecutionException {
+    public void twoClientsConnectAndCommunicate() throws IOException, InterruptedException, ExecutionException {
         ChatRoom chatRoom = new ChatRoom();
+        int port = 4242;
 
         ExecutorService testServer = Executors.newSingleThreadExecutor();
-        testServer.submit(() -> Main.start(chatRoom, 4242));
+        testServer.submit(() -> Main.start(chatRoom, port));
 
 
-        Socket socketOne = new Socket("localhost", 4242);
-        PrintWriter writer = new PrintWriter(socketOne.getOutputStream());
-        System.out.println("Connected SocketOne to server");
+        Socket socketOne = new Socket("localhost", port);
+        PrintWriter socketOneWriter = new PrintWriter(socketOne.getOutputStream());
+        System.out.println("Socket One connected");
 
-        Socket socketTwo = new Socket("localhost", 4242);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socketTwo.getInputStream()));
-        System.out.println("Connected SocketTwo to server");
+        Socket socketTwo = new Socket("localhost", port);
+        BufferedReader socketTwoReader = new BufferedReader(new InputStreamReader(socketTwo.getInputStream()));
+        System.out.println("Socket Two connected");
 
-        writer.println("ciao there");
-        writer.flush();
+        socketOneWriter.println("ciao there");
+        socketOneWriter.flush();
 
-        assertThat(reader.readLine()).isEqualTo("ciao there");
+        assertThat(socketTwoReader.readLine()).isEqualTo("ciao there");
 
         socketOne.close();
         socketTwo.close();

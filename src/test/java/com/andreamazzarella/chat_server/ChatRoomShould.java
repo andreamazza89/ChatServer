@@ -16,9 +16,9 @@ public class ChatRoomShould {
         MessageExchanger messageExchangerOne = new MessageExchanger(socketOne, chatRoom);
         MessageExchanger messageExchangerTwo = new MessageExchanger(socketTwo, chatRoom);
         MessageExchanger messageExchangerThree = new MessageExchanger(socketThree, chatRoom);
-        chatRoom.addMessageExchanger(messageExchangerOne);
-        chatRoom.addMessageExchanger(messageExchangerTwo);
-        chatRoom.addMessageExchanger(messageExchangerThree);
+        chatRoom.addSubscriber(messageExchangerOne);
+        chatRoom.addSubscriber(messageExchangerTwo);
+        chatRoom.addSubscriber(messageExchangerThree);
 
         chatRoom.notifyMessageFromClient("Hello from Socket One!", messageExchangerOne);
 
@@ -28,12 +28,29 @@ public class ChatRoomShould {
     }
 
     @Test
+    public void passMessagesToAllClientsButTheOneWhoSentIt() {
+        ChatRoom chatRoom = new ChatRoom();
+        FakeClientSocket socketOne = new FakeClientSocket();
+        FakeClientSocket socketTwo = new FakeClientSocket();
+        MessageExchanger messageExchangerOne = new MessageExchanger(socketOne, chatRoom);
+        MessageExchanger messageExchangerTwo = new MessageExchanger(socketTwo, chatRoom);
+        chatRoom.addSubscriber(messageExchangerOne);
+        chatRoom.addSubscriber(messageExchangerTwo);
+
+        chatRoom.notifyMessageFromClient("Hello from Socket One!", messageExchangerOne);
+        chatRoom.notifyMessageFromClient("Hello from Socket Two!", messageExchangerTwo);
+
+        assertThat(socketOne.receivedMessages()).isEqualTo("Hello from Socket Two!\n");
+        assertThat(socketTwo.receivedMessages()).isEqualTo("Hello from Socket One!\n");
+    }
+
+    @Test
     public void provideAListOfConnectedClients() {
         ChatRoom chatRoom = new ChatRoom();
         FakeClientSocket socket = new FakeClientSocket();
         MessageExchanger messageExchanger = new MessageExchanger(socket, chatRoom);
 
-        chatRoom.addMessageExchanger(messageExchanger);
+        chatRoom.addSubscriber(messageExchanger);
 
         assertThat(chatRoom.connectedClients().get(0)).isEqualTo(messageExchanger);
     }
