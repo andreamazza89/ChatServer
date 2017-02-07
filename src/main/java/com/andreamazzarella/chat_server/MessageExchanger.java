@@ -8,7 +8,7 @@ public class MessageExchanger {
     private final PrintStream clientInputStream;
     private final Notifiable chatRoom;
 
-    MessageExchanger(ClientSocket clientSocket, Notifiable chatRoom) {
+    MessageExchanger(Connection clientSocket, Notifiable chatRoom) {
         this.chatRoom = chatRoom;
 
         try {

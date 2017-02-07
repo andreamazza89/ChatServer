@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-public class ClientConnection implements ClientSocket {
+public class ClientConnection implements Connection {
 
     private final Socket rawClientSocket;
 

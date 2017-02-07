@@ -1,7 +1,7 @@
 package com.andreamazzarella.chat_server;
 
-import com.andreamazzarella.chat_server.support.FakeClientSocket;
-import com.andreamazzarella.chat_server.support.FakeChatRoom;
+import com.andreamazzarella.support.FakeSocket;
+import com.andreamazzarella.support.FakeChatRoom;
 import org.junit.Test;
 
 import java.io.*;
@@ -15,7 +15,7 @@ public class MessageExchangerShould {
 
     @Test
     public void forwardAMessageToTheClient() throws IOException {
-        FakeClientSocket clientSocket = new FakeClientSocket();
+        FakeSocket clientSocket = new FakeSocket();
         MessageExchanger messageExchanger = new MessageExchanger(clientSocket, new FakeChatRoom());
 
         messageExchanger.forward("sample line one");
@@ -26,7 +26,7 @@ public class MessageExchangerShould {
 
     @Test
     public void notifyTheServerWhenItReceivesAMessageFromTheClient() throws IOException, InterruptedException {
-        FakeClientSocket clientSocket = new FakeClientSocket();
+        FakeSocket clientSocket = new FakeSocket();
         FakeChatRoom chatRoom = new FakeChatRoom();
         MessageExchanger messageExchanger = new MessageExchanger(clientSocket, chatRoom);
         Executors.newSingleThreadExecutor().submit(() -> messageExchanger.startListening());
@@ -41,7 +41,7 @@ public class MessageExchangerShould {
 
     @Test
     public void beAbleToBothReceiveAndSendMessages() throws InterruptedException, IOException {
-        FakeClientSocket clientSocket = new FakeClientSocket();
+        FakeSocket clientSocket = new FakeSocket();
         FakeChatRoom chatRoom = new FakeChatRoom();
         MessageExchanger messageExchanger = new MessageExchanger(clientSocket, chatRoom);
         Executors.newSingleThreadExecutor().submit(() -> messageExchanger.startListening());

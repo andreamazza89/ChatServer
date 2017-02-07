@@ -1,6 +1,6 @@
 package com.andreamazzarella.chat_server;
 
-import com.andreamazzarella.chat_server.support.FakeClientSocket;
+import com.andreamazzarella.support.FakeSocket;
 import org.junit.Test;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -10,9 +10,9 @@ public class ChatRoomShould {
     @Test
     public void passAMessageToAllClientsButTheOneWhoSentIt() {
         ChatRoom chatRoom = new ChatRoom();
-        FakeClientSocket socketOne = new FakeClientSocket();
-        FakeClientSocket socketTwo = new FakeClientSocket();
-        FakeClientSocket socketThree = new FakeClientSocket();
+        FakeSocket socketOne = new FakeSocket();
+        FakeSocket socketTwo = new FakeSocket();
+        FakeSocket socketThree = new FakeSocket();
         MessageExchanger messageExchangerOne = new MessageExchanger(socketOne, chatRoom);
         MessageExchanger messageExchangerTwo = new MessageExchanger(socketTwo, chatRoom);
         MessageExchanger messageExchangerThree = new MessageExchanger(socketThree, chatRoom);
@@ -30,8 +30,8 @@ public class ChatRoomShould {
     @Test
     public void passMessagesToAllClientsButTheOneWhoSentIt() {
         ChatRoom chatRoom = new ChatRoom();
-        FakeClientSocket socketOne = new FakeClientSocket();
-        FakeClientSocket socketTwo = new FakeClientSocket();
+        FakeSocket socketOne = new FakeSocket();
+        FakeSocket socketTwo = new FakeSocket();
         MessageExchanger messageExchangerOne = new MessageExchanger(socketOne, chatRoom);
         MessageExchanger messageExchangerTwo = new MessageExchanger(socketTwo, chatRoom);
         chatRoom.addSubscriber(messageExchangerOne);
@@ -47,7 +47,7 @@ public class ChatRoomShould {
     @Test
     public void provideAListOfConnectedClients() {
         ChatRoom chatRoom = new ChatRoom();
-        FakeClientSocket socket = new FakeClientSocket();
+        FakeSocket socket = new FakeSocket();
         MessageExchanger messageExchanger = new MessageExchanger(socket, chatRoom);
 
         chatRoom.addSubscriber(messageExchanger);

@@ -1,17 +1,21 @@
-package com.andreamazzarella.chat_server.support;
+package com.andreamazzarella.support;
 
-import com.andreamazzarella.chat_server.ClientSocket;
+import com.andreamazzarella.chat_server.Connection;
 
 import java.io.*;
 import java.net.SocketAddress;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-public class FakeClientSocket implements ClientSocket {
+public class FakeSocket implements Connection {
 
-    private OutputStream outputStream = new ByteArrayOutputStream();
+    private OutputStream outputStream = new MonitoredByteArrayOutputStream();
     private PipedOutputStream pipedOutputStream;
     private PipedInputStream pipedInputStream;
 
-    public FakeClientSocket() {
+    private CountDownLatch waitForMessage = new CountDownLatch(1);
+
+    public FakeSocket() {
         this.pipedOutputStream = new PipedOutputStream();
         try {
             this.pipedInputStream = new PipedInputStream(pipedOutputStream);
@@ -31,7 +35,7 @@ public class FakeClientSocket implements ClientSocket {
     }
 
     @Override
-    public OutputStream getOutputStream() throws IOException {
+    public OutputStream getOutputStream() {
         return outputStream;
     }
 
@@ -45,5 +49,25 @@ public class FakeClientSocket implements ClientSocket {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    public void waitForMessageThen(int timeOut, TimeUnit timeUnit, Runnable callback) {
+        try {
+            waitForMessage.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        callback.run();
+    }
+
+    private class MonitoredByteArrayOutputStream extends ByteArrayOutputStream {
+
+        @Override
+        public synchronized void write(byte[] b, int off, int len) {
+            waitForMessage.countDown();
+            super.write(b, off, len);
+        }
+
     }
 }

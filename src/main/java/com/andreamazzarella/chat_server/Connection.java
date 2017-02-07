@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketAddress;
 
-public interface ClientSocket {
+public interface Connection {
     OutputStream getOutputStream() throws IOException;
     InputStream getInputStream() throws IOException;
 

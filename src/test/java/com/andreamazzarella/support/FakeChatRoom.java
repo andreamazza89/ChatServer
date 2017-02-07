@@ -1,4 +1,4 @@
-package com.andreamazzarella.chat_server.support;
+package com.andreamazzarella.support;
 
 import com.andreamazzarella.chat_server.MessageExchanger;
 import com.andreamazzarella.chat_server.Notifiable;
