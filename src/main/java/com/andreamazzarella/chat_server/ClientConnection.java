@@ -10,7 +10,7 @@ public class ClientConnection implements Connection {
 
     private final Socket rawClientSocket;
 
-    ClientConnection(Socket rawClientSocket) {
+    public ClientConnection(Socket rawClientSocket) {
         this.rawClientSocket = rawClientSocket;
     }
 
