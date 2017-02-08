@@ -9,15 +9,23 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         String serverAddress = args[0];
         int serverPort = Integer.parseInt(args[1]);
 
-        System.out.println("welcome");
+        System.out.println("Welcome to the ChattyChat; tryihng to connect to server on port " + serverPort);
 
-        Socket socket = new Socket(serverAddress, serverPort);
+        Socket socket = null;
+
+        try {
+            socket = new Socket(serverAddress, serverPort);
+        } catch (IOException e) {
+            System.out.println("Could not reach the server: please check server address, port number and ensure server is up");
+            System.exit(1);
+            e.printStackTrace();
+        }
+
         Connection connection = new ClientConnection(socket);
-
         LocalIO localIO = new LocalIO() {
             @Override
             public InputStream getInputStream() {
