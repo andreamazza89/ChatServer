@@ -11,7 +11,7 @@ public class ChatClient {
     private final OutputStream localOutputWriter;
     private final BufferedReader localInputReader;
 
-    private final PrintStream remoteOutputWriter;
+    private final OutputStream remoteOutputWriter;
     private final BufferedReader remoteInputReader;
 
     public ChatClient(LocalIO localIO, Connection remoteSocket) {
