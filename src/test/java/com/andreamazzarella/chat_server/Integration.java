@@ -17,7 +17,7 @@ public class Integration {
 
     @Test
     public void twoClientsConnectAndCommunicate() throws IOException, InterruptedException, ExecutionException {
-        ChatRoom chatRoom = new ChatRoom();
+        ChatRoom chatRoom = new ChatRoom(new CommunicationProtocol());
         int port = 4242;
 
         ExecutorService testServer = Executors.newSingleThreadExecutor();

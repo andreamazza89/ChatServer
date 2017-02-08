@@ -2,15 +2,14 @@ package com.andreamazzarella.chat_server;
 
 import java.io.*;
 
-public class MessageExchanger {
+public class RealUser implements User {
 
     private final BufferedReader clientOutputStream;
     private final PrintStream clientInputStream;
-    private final Notifiable chatRoom;
+    private Notifiable chatRoom;
+    private String userName;
 
-    MessageExchanger(Connection clientSocket, Notifiable chatRoom) {
-        this.chatRoom = chatRoom;
-
+    RealUser(Connection clientSocket) {
         try {
             clientInputStream = new PrintStream(clientSocket.getOutputStream());
             clientOutputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -19,11 +18,18 @@ public class MessageExchanger {
         }
     }
 
-    void forward(String message) {
+    @Override
+    public void subscribeToRoom(Notifiable room) {
+        this.chatRoom = room;
+    }
+
+    @Override
+    public void forward(String message) {
         clientInputStream.println(message);
     }
 
-    void startListening() {
+    @Override
+    public void startListening() {
         String message_received;
         try {
             while ((message_received = clientOutputStream.readLine()) != null) {
@@ -32,5 +38,25 @@ public class MessageExchanger {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    @Override
+    public String getUserName() {
+        return userName;
+    }
+
+    @Override
+    public void askUserName() {
+        clientInputStream.println("Please enter your name");
+        try {
+            userName = clientOutputStream.readLine();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Override
+    public void greet() {
+        clientInputStream.println("Welcome to ChattyChat");
     }
 }

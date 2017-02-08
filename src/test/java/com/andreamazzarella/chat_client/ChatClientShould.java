@@ -32,7 +32,7 @@ public class ChatClientShould {
         Executors.newSingleThreadExecutor().submit(chatClient::startCommunication);
         localIO.newMessage("Yo, anybody there?\n");
 
-        remoteSocket.waitForMessageThen(1000, () -> assertEquals("Yo, anybody there?\n", remoteSocket.receivedMessages()));
+        remoteSocket.waitForMessageThen(1000, () -> assertEquals("Yo, anybody there?\n", remoteSocket.receivedMessage()));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class ChatClientShould {
         remoteSocket.newMessage("Yes, I am here\n");
 
         remoteSocket.waitForMessageThen(1000, () -> {
-            assertEquals("Yo, anybody there?\n", remoteSocket.receivedMessages());
+            assertEquals("Yo, anybody there?\n", remoteSocket.receivedMessage());
         });
 
         localIO.waitForMessageThen(1000, () -> assertEquals("Yes, I am here\n", localIO.receivedMessages()));

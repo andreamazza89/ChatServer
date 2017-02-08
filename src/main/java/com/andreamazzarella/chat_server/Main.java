@@ -10,8 +10,8 @@ import java.util.concurrent.Executors;
 public class Main {
 
     public static void main(String[] args) {
-        ChatRoom chatRoom = new ChatRoom();
         int portNumber = Integer.parseInt(args[0]);
+        ChatRoom chatRoom = new ChatRoom(new CommunicationProtocol());
 
         start(chatRoom, portNumber);
     }
@@ -26,7 +26,14 @@ public class Main {
                 Socket rawSocket = serverSocket.accept();
 
                 connections.submit(() -> {
-                    MessageExchanger messageExchanger = new MessageExchanger(new ClientConnection(rawSocket), chatRoom);
+                    User messageExchanger = new RealUser(new ClientConnection(rawSocket));
+
+                    // messageExchanger.greetNewUser();
+                    // String userName = messageExchanger.askUserName();
+                    // chatRoom.addSubscriber(messageExchanger, userName);
+                    // messageExchanger.startListening();
+
+
                     chatRoom.addSubscriber(messageExchanger);
                     messageExchanger.startListening();
                 });

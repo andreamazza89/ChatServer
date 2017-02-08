@@ -13,10 +13,12 @@ public class Main {
         String serverAddress = args[0];
         int serverPort = Integer.parseInt(args[1]);
 
+
+
+        /////////////////////////////// Session: takes the localIO to let the user know what is going on and either
+        /////////////////////////////////returns a socket or exits
         System.out.println("Welcome to the ChattyChat; tryihng to connect to server on port " + serverPort);
-
         Socket socket = null;
-
         try {
             socket = new Socket(serverAddress, serverPort);
         } catch (IOException e) {
@@ -24,6 +26,11 @@ public class Main {
             System.exit(1);
             e.printStackTrace();
         }
+        System.out.println("Connected to server!");
+        ///////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////
+
+
 
         Connection connection = new ClientConnection(socket);
         LocalIO localIO = new LocalIO() {

@@ -56,7 +56,7 @@ public class FakeSocket implements Connection {
         }
     }
 
-    public String receivedMessages() {
+    public String receivedMessage() {
         return outputStream.toString();
     }
 

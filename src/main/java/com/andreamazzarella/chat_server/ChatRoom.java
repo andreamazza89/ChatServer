@@ -5,24 +5,27 @@ import java.util.List;
 
 public class ChatRoom implements Notifiable {
 
-    private List<MessageExchanger> exchangersSubscribedToRoom = new ArrayList<>();
+    private final CommunicationProtocol protocol;
+    private List<User> usersSubscribedToRoom = new ArrayList<>();
+
+    public ChatRoom(CommunicationProtocol protocol) {
+        this.protocol = protocol;
+    }
 
     @Override
-    public void notifyMessageFromClient(String message, MessageExchanger sender) {
-        for (MessageExchanger messageExchanger : exchangersSubscribedToRoom) {
-            if (messageExchanger != sender) {
-                messageExchanger.forward(message);
+    public void notifyMessageFromClient(String rawMessage, User sender) {
+        String encodedMessage = protocol.messageFrom(sender).withContent(rawMessage).encode();
+        for (User user : usersSubscribedToRoom) {
+            if (user != sender) {
+                user.forward(encodedMessage);
             }
         }
     }
 
     @Override
-    public List<MessageExchanger> connectedClients() {
-        return exchangersSubscribedToRoom;
-    }
-
-    void addSubscriber(MessageExchanger messageExchanger) {
-        exchangersSubscribedToRoom.add(messageExchanger);
+    public void addSubscriber(User user) {
+        usersSubscribedToRoom.add(user);
+        user.subscribeToRoom(this);
     }
 
 }

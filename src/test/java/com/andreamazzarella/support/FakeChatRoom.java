@@ -1,37 +1,35 @@
 package com.andreamazzarella.support;
 
-import com.andreamazzarella.chat_server.MessageExchanger;
+import com.andreamazzarella.chat_server.User;
 import com.andreamazzarella.chat_server.Notifiable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class FakeChatRoom implements Notifiable {
     private String receivedMessage;
-    private MessageExchanger clientConnection;
+    private User user;
     private CountDownLatch waitForMessageNotification = new CountDownLatch(1);
 
     @Override
-    public void notifyMessageFromClient(String message, MessageExchanger clientConnection) {
+    public void notifyMessageFromClient(String message, User user) {
         waitForMessageNotification.countDown();
 
         this.receivedMessage = message;
-        this.clientConnection = clientConnection;
+        this.user = user;
     }
 
     @Override
-    public List<MessageExchanger> connectedClients() {
-        return new ArrayList<>();
+    public void addSubscriber(User user) {
+        user.subscribeToRoom(this);
     }
 
     public String receivedMessage() {
         return receivedMessage;
     }
 
-    public MessageExchanger sentBy() {
-        return clientConnection;
+    public User sentBy() {
+        return user;
     }
 
     public void waitForMessageThen(long timeout, TimeUnit timeUnit, Runnable callback) {
