@@ -39,9 +39,9 @@ public class FakeSocket implements Connection {
         return outputStream;
     }
 
-    public void waitForMessageThen(int timeOut, TimeUnit timeUnit, Runnable callback) {
+    public void waitForMessageThen(int timeOut, Runnable callback) {
         try {
-            waitForMessage.await(timeOut, timeUnit);
+            waitForMessage.await(timeOut, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

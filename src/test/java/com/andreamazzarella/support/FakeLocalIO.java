@@ -21,13 +21,7 @@ public class FakeLocalIO implements LocalIO {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-
-
-
-
 
     @Override
     public InputStream getInputStream() {
@@ -39,9 +33,9 @@ public class FakeLocalIO implements LocalIO {
         return outputStream;
     }
 
-    public void waitForMessageThen(int timeOut, TimeUnit unit, Runnable callBack) {
+    public void waitForMessageThen(int timeOut, Runnable callBack) {
         try {
-            waitForMessage.await(timeOut, unit);
+            waitForMessage.await(timeOut, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
