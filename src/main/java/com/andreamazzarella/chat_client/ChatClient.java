@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ChatClient {
+class ChatClient {
 
     private final OutputStream localOutputWriter;
     private final BufferedReader localInputReader;
@@ -14,7 +14,7 @@ public class ChatClient {
     private final OutputStream remoteOutputWriter;
     private final BufferedReader remoteInputReader;
 
-    public ChatClient(LocalIO localIO, Connection remoteSocket) {
+    ChatClient(LocalIO localIO, Connection remoteSocket) {
        this.localInputReader = new BufferedReader(new InputStreamReader(localIO.getInputStream()));
         this.localOutputWriter = new PrintStream(localIO.getOutputStream());
 
@@ -26,30 +26,21 @@ public class ChatClient {
         }
     }
 
-    public void startCommunication() {
+    void startCommunication() {
         ExecutorService sendReceivePool = Executors.newFixedThreadPool(2);
 
-        sendReceivePool.submit(() -> {
-            String messageReceivedFromLocalSocket;
-            try {
+        sendReceivePool.submit(() -> pipe(localInputReader, remoteOutputWriter));
+        sendReceivePool.submit(() -> pipe(remoteInputReader, localOutputWriter));
+    }
 
-                while ((messageReceivedFromLocalSocket = localInputReader.readLine()) != null) {
-                    remoteOutputWriter.write(messageReceivedFromLocalSocket.getBytes());
-                }
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
+    private void pipe(BufferedReader reader, OutputStream writer) {
+        String messageReceived;
+        try {
+            while ((messageReceived = reader.readLine()) != null) {
+                writer.write(messageReceived.getBytes());
             }
-        });
-
-        sendReceivePool.submit(() -> {
-            String messageReceivedFromRemoteSocket;
-            try {
-                while ((messageReceivedFromRemoteSocket = remoteInputReader.readLine()) != null) {
-                    localOutputWriter.write(messageReceivedFromRemoteSocket.getBytes());
-                }
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
-        });
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }
