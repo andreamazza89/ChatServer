@@ -15,7 +15,7 @@ public class ChatClient {
     private final BufferedReader remoteInputReader;
 
     public ChatClient(LocalIO localIO, Connection remoteSocket) {
-        this.localInputReader = new BufferedReader(new InputStreamReader(localIO.getInputStream()));
+       this.localInputReader = new BufferedReader(new InputStreamReader(localIO.getInputStream()));
         this.localOutputWriter = new PrintStream(localIO.getOutputStream());
 
         try {

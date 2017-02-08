@@ -9,9 +9,9 @@ import java.util.concurrent.TimeUnit;
 
 public class FakeSocket implements Connection {
 
-    private OutputStream outputStream = new MonitoredByteArrayOutputStream();
     private PipedOutputStream pipedOutputStream;
     private PipedInputStream pipedInputStream;
+    private OutputStream outputStream = new MonitoredByteArrayOutputStream();
 
     private CountDownLatch waitForMessage = new CountDownLatch(1);
 
@@ -25,13 +25,13 @@ public class FakeSocket implements Connection {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
-        return pipedInputStream;
+    public void connect(SocketAddress serverAddress) throws IOException {
+        // pretend it just made a connection
     }
 
     @Override
-    public void connect(SocketAddress serverAddress) throws IOException {
-        // pretend it just made a connection
+    public InputStream getInputStream() throws IOException {
+        return pipedInputStream;
     }
 
     @Override
@@ -39,8 +39,13 @@ public class FakeSocket implements Connection {
         return outputStream;
     }
 
-    public String receivedMessages() {
-        return outputStream.toString();
+    public void waitForMessageThen(int timeOut, TimeUnit timeUnit, Runnable callback) {
+        try {
+            waitForMessage.await(timeOut, timeUnit);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        callback.run();
     }
 
     public void newMessage(String message) {
@@ -51,14 +56,8 @@ public class FakeSocket implements Connection {
         }
     }
 
-    public void waitForMessageThen(int timeOut, TimeUnit timeUnit, Runnable callback) {
-        try {
-            waitForMessage.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        callback.run();
+    public String receivedMessages() {
+        return outputStream.toString();
     }
 
     private class MonitoredByteArrayOutputStream extends ByteArrayOutputStream {

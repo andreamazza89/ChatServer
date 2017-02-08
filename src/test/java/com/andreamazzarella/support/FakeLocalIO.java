@@ -11,6 +11,7 @@ public class FakeLocalIO implements LocalIO {
     private PipedOutputStream pipedOutputStream;
     private PipedInputStream pipedInputStream;
     private OutputStream outputStream = new MonitoredByteArrayOutputStream();
+
     private CountDownLatch waitForMessage = new CountDownLatch(1);
 
     public FakeLocalIO() {
@@ -22,6 +23,11 @@ public class FakeLocalIO implements LocalIO {
         }
 
     }
+
+
+
+
+
 
     @Override
     public InputStream getInputStream() {
@@ -48,6 +54,10 @@ public class FakeLocalIO implements LocalIO {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    public String receivedMessages() {
+        return outputStream.toString();
     }
 
     private class MonitoredByteArrayOutputStream extends ByteArrayOutputStream {
