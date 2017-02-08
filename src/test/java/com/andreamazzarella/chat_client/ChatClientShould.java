@@ -22,7 +22,7 @@ public class ChatClientShould {
         remoteSocket.newMessage("Hiya!\n");
 
         localIO.waitForMessageThen(1000, TimeUnit.MILLISECONDS, () -> {
-            assertEquals("Hiya!", localIO.getOutputStream().toString());
+            assertEquals("Hiya!", localIO.receivedMessages());
         });
     }
 
@@ -36,7 +36,7 @@ public class ChatClientShould {
         localIO.newMessage("Yo, anybody there?\n");
 
         remoteSocket.waitForMessageThen(1000, TimeUnit.MILLISECONDS, () -> {
-            assertEquals("Yo, anybody there?", remoteSocket.getOutputStream().toString());
+            assertEquals("Yo, anybody there?", remoteSocket.receivedMessages());
         });
     }
 }
