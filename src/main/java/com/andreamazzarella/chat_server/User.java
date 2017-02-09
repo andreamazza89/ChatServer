@@ -5,6 +5,6 @@ public interface User {
     void askUserName();
     void forward(String message);
     void subscribeToRoom(Notifiable room);
-    void startListening();
+    void startConversation();
     String getUserName();
 }

@@ -31,7 +31,7 @@ public class RealUserShould {
         FakeChatRoom chatRoom = new FakeChatRoom();
         chatRoom.addSubscriber(user);
 
-        Executors.newSingleThreadExecutor().submit(user::startListening);
+        Executors.newSingleThreadExecutor().submit(user::startConversation);
         clientSocket.newMessage("test message\n");
 
         chatRoom.waitForMessageThen(1000, TimeUnit.MILLISECONDS, () -> {
@@ -46,7 +46,7 @@ public class RealUserShould {
         FakeChatRoom chatRoom = new FakeChatRoom();
         User user = new RealUser(clientSocket);
         chatRoom.addSubscriber(user);
-        Executors.newSingleThreadExecutor().submit(user::startListening);
+        Executors.newSingleThreadExecutor().submit(user::startConversation);
 
         user.forward("sample line one");
         clientSocket.newMessage("test message\n");

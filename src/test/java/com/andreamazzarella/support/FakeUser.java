@@ -14,9 +14,6 @@ public class FakeUser implements User {
         this.userName = userName;
     }
 
-    public FakeUser() {
-    }
-
     @Override
     public void greet() {
     }
@@ -37,12 +34,12 @@ public class FakeUser implements User {
     }
 
     @Override
-    public void startListening() {
+    public void startConversation() {
     }
 
     @Override
     public String getUserName() {
-        return null;
+        return userName;
     }
 
     public String receivedMessage() {

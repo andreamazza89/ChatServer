@@ -29,7 +29,7 @@ public class RealUser implements User {
     }
 
     @Override
-    public void startListening() {
+    public void startConversation() {
         String message_received;
         try {
             while ((message_received = clientOutputStream.readLine()) != null) {

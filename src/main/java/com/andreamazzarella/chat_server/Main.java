@@ -26,16 +26,11 @@ public class Main {
                 Socket rawSocket = serverSocket.accept();
 
                 connections.submit(() -> {
-                    User messageExchanger = new RealUser(new ClientConnection(rawSocket));
-
-                    // messageExchanger.greetNewUser();
-                    // String userName = messageExchanger.askUserName();
-                    // chatRoom.addSubscriber(messageExchanger, userName);
-                    // messageExchanger.startListening();
-
-
-                    chatRoom.addSubscriber(messageExchanger);
-                    messageExchanger.startListening();
+                    User user = new RealUser(new ClientConnection(rawSocket));
+                    user.greet();
+                    user.askUserName();
+                    chatRoom.addSubscriber(user);
+                    user.startConversation();
                 });
             } catch (IOException e) {
                 throw new UncheckedIOException(e);

@@ -23,7 +23,6 @@ public class Integration {
         ExecutorService testServer = Executors.newSingleThreadExecutor();
         testServer.submit(() -> Main.start(chatRoom, port));
 
-
         Socket socketOne = new Socket("localhost", port);
         PrintWriter socketOneWriter = new PrintWriter(socketOne.getOutputStream());
         System.out.println("Socket One connected");
