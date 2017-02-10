@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit;
 
 public class FakeLocalIO implements LocalIO {
 
+    private BufferedReader input;
     private PipedOutputStream pipedOutputStream;
-    private PipedInputStream pipedInputStream;
     private OutputStream outputStream = new ByteArrayOutputStream();
 
     private CountDownLatch waitForMessage = new CountDownLatch(1);
@@ -17,26 +17,26 @@ public class FakeLocalIO implements LocalIO {
     public FakeLocalIO() {
         this.pipedOutputStream = new PipedOutputStream();
         try {
-            this.pipedInputStream = new PipedInputStream(pipedOutputStream);
+            PipedInputStream pipedInputStream = new PipedInputStream(pipedOutputStream);
+            this.input = new BufferedReader(new InputStreamReader(pipedInputStream));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public InputStream getInputStream() {
-        return pipedInputStream;
-    }
-
-    @Override
-    public OutputStream getOutputStream() {
-        return outputStream;
-    }
-
-    @Override
     public void addMessage(String message) {
         new PrintStream(outputStream).println(message);
         waitForMessage.countDown();
+    }
+
+    @Override
+    public String readLine() {
+        try {
+            return input.readLine();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     public void waitForMessageThen(int timeOut, Runnable callBack) {

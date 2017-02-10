@@ -8,13 +8,11 @@ import java.util.concurrent.Executors;
 
 class ChatClient {
     private final LocalIO localIO;
-    private final BufferedReader localInputReader;
 
     private final PrintStream remoteOutputWriter;
     private final BufferedReader remoteInputReader;
 
     ChatClient(LocalIO localIO, Connection remoteSocket) {
-       this.localInputReader = new BufferedReader(new InputStreamReader(localIO.getInputStream()));
        this.localIO = localIO;
 
         try {
@@ -28,18 +26,14 @@ class ChatClient {
     void startCommunication() {
         ExecutorService sendReceivePool = Executors.newFixedThreadPool(2);
 
-        sendReceivePool.submit(() -> sendOutgoingMessages(localInputReader, remoteOutputWriter));
+        sendReceivePool.submit(() -> sendOutgoingMessages());
         sendReceivePool.submit(() -> decodeIncomingMessages());
     }
 
-    private void sendOutgoingMessages(BufferedReader reader, PrintStream writer) {
+    private void sendOutgoingMessages() {
         String messageReceived;
-        try {
-            while ((messageReceived = reader.readLine()) != null) {
-                writer.println(messageReceived);
-            }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+        while ((messageReceived = localIO.readLine()) != null) {
+            remoteOutputWriter.println(messageReceived);
         }
     }
 
@@ -50,7 +44,7 @@ class ChatClient {
                 localIO.addMessage(rawMessageReceived);
             }
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            e.printStackTrace();
         }
     }
 
