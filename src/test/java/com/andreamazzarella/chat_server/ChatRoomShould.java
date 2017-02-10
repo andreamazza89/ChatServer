@@ -9,7 +9,7 @@ public class ChatRoomShould {
 
     @Test
     public void encodeMessageAndPassToAllClientsButTheOneWhoSentIt() {
-        CommunicationProtocol protocol = new CommunicationProtocol();
+        ChatProtocol protocol = new RealChatProtocol();
         ChatRoom chatRoom = new ChatRoom(protocol);
         FakeUser andrea = new FakeUser("andrea");
         FakeUser maria = new FakeUser("giorgio");
@@ -18,14 +18,14 @@ public class ChatRoomShould {
 
         chatRoom.notifyMessageFromClient("Hello from andrea!", andrea);
 
-        String encodedMessage = protocol.messageFrom(andrea).withContent("Hello from andrea!").encode();
+        String encodedMessage = protocol.messageFrom(andrea).addContent("Hello from andrea!").encodeMessage();
         assertThat(andrea.receivedMessage()).isEqualTo("");
         assertThat(maria.receivedMessage()).isEqualTo(encodedMessage);
     }
 
     @Test
     public void passMessagesToAllClientsButTheOneWhoSentIt() {
-        CommunicationProtocol protocol = new CommunicationProtocol();
+        ChatProtocol protocol = new RealChatProtocol();
         ChatRoom chatRoom = new ChatRoom(protocol);
         FakeUser andrea = new FakeUser("andrea");
         FakeUser maria = new FakeUser("giorgio");
@@ -35,20 +35,20 @@ public class ChatRoomShould {
         chatRoom.notifyMessageFromClient("Hello from andrea!", andrea);
         chatRoom.notifyMessageFromClient("Hello from maria!", maria);
 
-        String encodedMessageFromAndrea = protocol.messageFrom(andrea).withContent("Hello from andrea!").encode();
-        String encodedMessageFromMaria = protocol.messageFrom(maria).withContent("Hello from maria!").encode();
+        String encodedMessageFromAndrea = protocol.messageFrom(andrea).addContent("Hello from andrea!").encodeMessage();
+        String encodedMessageFromMaria = protocol.messageFrom(maria).addContent("Hello from maria!").encodeMessage();
         assertThat(andrea.receivedMessage()).isEqualTo(encodedMessageFromMaria);
         assertThat(maria.receivedMessage()).isEqualTo(encodedMessageFromAndrea);
     }
 
     @Test
     public void subscribeItselfToTheUser() {
-        ChatRoom chatRoom = new ChatRoom(new CommunicationProtocol());
+        ChatRoom chatRoom = new ChatRoom(new RealChatProtocol());
         FakeUser andrea = new FakeUser("andrea");
 
         chatRoom.addSubscriber(andrea);
 
-        assertThat(andrea.subscribeToRoomWasCalled()).isEqualTo(true);
+        assertThat(andrea.subscribeToRoomWasCalled()).isTrue();
     }
 
 }

@@ -3,7 +3,7 @@ package com.andreamazzarella.chat_server;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CommunicationProtocol {
+public class RealChatProtocol implements ChatProtocol {
 
     private final static String FLAG_ANCHOR = "~";
     private final static String USERNAME_FLAG = FLAG_ANCHOR + "userName" + FLAG_ANCHOR;
@@ -13,17 +13,20 @@ public class CommunicationProtocol {
     private String messageContent = "";
     private String userName = "";
 
-    public CommunicationProtocol messageFrom(User user) {
+    @Override
+    public ChatProtocol messageFrom(User user) {
         this.userName = user.getUserName();
         return this;
     }
 
-    public CommunicationProtocol withContent(String content) {
+    @Override
+    public ChatProtocol addContent(String content) {
         this.messageContent = content;
         return this;
     }
 
-    public String encode() {
+    @Override
+    public String encodeMessage() {
         String userName = encodeUserName();
         String messageContent = encodeMessageContent();
 
@@ -46,14 +49,16 @@ public class CommunicationProtocol {
         return USERNAME_FLAG + userName;
     }
 
+    @Override
     public String decodeUserName(String encodedMessage) {
-        Pattern userNamePattern = Pattern.compile("~userName~" + "([^~]*)" + ".*");
+        Pattern userNamePattern = Pattern.compile(".*" + "~userName~" + "([^~]*)" + ".*");
         Matcher matcher = userNamePattern.matcher(encodedMessage);
         matcher.matches();
 
         return matcher.group(1);
     }
 
+    @Override
     public String decodeMessageContent(String encodedMessage) {
         Pattern messageContentPattern = Pattern.compile(".*" + "~messageContent~" + "([^~]*)" + ".*");
         Matcher matcher = messageContentPattern.matcher(encodedMessage);

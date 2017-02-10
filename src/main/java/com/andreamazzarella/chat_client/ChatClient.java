@@ -7,8 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 class ChatClient {
-
-    private final PrintStream localOutputWriter;
+    private final LocalIO localIO;
     private final BufferedReader localInputReader;
 
     private final PrintStream remoteOutputWriter;
@@ -16,7 +15,7 @@ class ChatClient {
 
     ChatClient(LocalIO localIO, Connection remoteSocket) {
        this.localInputReader = new BufferedReader(new InputStreamReader(localIO.getInputStream()));
-        this.localOutputWriter = new PrintStream(localIO.getOutputStream());
+       this.localIO = localIO;
 
         try {
             this.remoteInputReader = new BufferedReader(new InputStreamReader(remoteSocket.getInputStream()));
@@ -29,11 +28,11 @@ class ChatClient {
     void startCommunication() {
         ExecutorService sendReceivePool = Executors.newFixedThreadPool(2);
 
-        sendReceivePool.submit(() -> pipe(localInputReader, remoteOutputWriter));
-        sendReceivePool.submit(() -> pipe(remoteInputReader, localOutputWriter));
+        sendReceivePool.submit(() -> sendOutgoingMessages(localInputReader, remoteOutputWriter));
+        sendReceivePool.submit(() -> decodeIncomingMessages());
     }
 
-    private void pipe(BufferedReader reader, PrintStream writer) {
+    private void sendOutgoingMessages(BufferedReader reader, PrintStream writer) {
         String messageReceived;
         try {
             while ((messageReceived = reader.readLine()) != null) {
@@ -43,4 +42,16 @@ class ChatClient {
             throw new UncheckedIOException(e);
         }
     }
+
+    private void decodeIncomingMessages() {
+        String rawMessageReceived;
+        try {
+            while ((rawMessageReceived = remoteInputReader.readLine()) != null) {
+                localIO.addMessage(rawMessageReceived);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
 }

@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class ChatClientShould {
 
     @Test
-    public void printMessageReceivedFromSocketToTheLocalOutputStream() throws InterruptedException, IOException {
+    public void passMessageReceivedFromSocketToLocalIO() throws InterruptedException, IOException {
         FakeLocalIO localIO = new FakeLocalIO();
         FakeSocket remoteSocket = new FakeSocket();
 
@@ -24,7 +24,7 @@ public class ChatClientShould {
     }
 
     @Test
-    public void printMessageReceivedFromLocalInputStreamToSocket() throws InterruptedException, IOException {
+    public void passMessageReceivedFromLocalIOToSocket() throws InterruptedException, IOException {
         FakeLocalIO localIO = new FakeLocalIO();
         FakeSocket remoteSocket = new FakeSocket();
 
@@ -36,7 +36,7 @@ public class ChatClientShould {
     }
 
     @Test
-    public void sendMessagesInBothDirectionsAtTheSameTime() {
+    public void passMessagesInBothDirectionsAtTheSameTime() {
         FakeLocalIO localIO = new FakeLocalIO();
         FakeSocket remoteSocket = new FakeSocket();
 

@@ -16,7 +16,7 @@ public class RealUserShould {
     @Test
     public void forwardAMessageToTheClient() throws IOException {
         FakeSocket clientSocket = new FakeSocket();
-        User user = new RealUser(clientSocket);
+        User user = new RealUser(clientSocket, new RealChatProtocol());
 
         user.forward("sample line one");
         user.forward("sample line two");
@@ -27,7 +27,7 @@ public class RealUserShould {
     @Test
     public void notifyTheServerWhenItReceivesAMessageFromTheClient() throws IOException, InterruptedException {
         FakeSocket clientSocket = new FakeSocket();
-        User user = new RealUser(clientSocket);
+        User user = new RealUser(clientSocket, new RealChatProtocol());
         FakeChatRoom chatRoom = new FakeChatRoom();
         chatRoom.addSubscriber(user);
 
@@ -44,7 +44,7 @@ public class RealUserShould {
     public void beAbleToBothReceiveAndSendMessages() throws InterruptedException, IOException {
         FakeSocket clientSocket = new FakeSocket();
         FakeChatRoom chatRoom = new FakeChatRoom();
-        User user = new RealUser(clientSocket);
+        User user = new RealUser(clientSocket, new RealChatProtocol());
         chatRoom.addSubscriber(user);
         Executors.newSingleThreadExecutor().submit(user::startConversation);
 
@@ -62,22 +62,26 @@ public class RealUserShould {
     @Test
     public void greetTheUser() {
         FakeSocket clientSocket = new FakeSocket();
-        User user = new RealUser(clientSocket);
+        ChatProtocol protocol = new RealChatProtocol();
+        User user = new RealUser(clientSocket, protocol);
 
         user.greet();
 
-        assertThat(clientSocket.receivedMessage()).isEqualTo("Welcome to ChattyChat\n");
+        String encodedMessage = protocol.addContent("Welcome to ChattyChat\n").encodeMessage();
+        assertThat(clientSocket.receivedMessage()).isEqualTo(encodedMessage);
     }
 
     @Test
     public void askTheUserName() {
         FakeSocket clientSocket = new FakeSocket();
-        User user = new RealUser(clientSocket);
+        ChatProtocol protocol = new RealChatProtocol();
+        User user = new RealUser(clientSocket, protocol);
 
         Executors.newSingleThreadExecutor().submit(user::askUserName);
 
         clientSocket.waitForMessageThen(1000, () -> {
-            assertThat(clientSocket.receivedMessage()).isEqualTo("Please enter your name\n");
+            String encodedMessage = protocol.addContent("Please enter your name\n").encodeMessage();
+            assertThat(clientSocket.receivedMessage()).isEqualTo(encodedMessage);
         });
     }
 
@@ -85,7 +89,8 @@ public class RealUserShould {
     public void registerTheUserName() {
         FakeSocket clientSocket = new FakeSocket();
         clientSocket.newMessage("Andrea\n");
-        User user = new RealUser(clientSocket);
+        ChatProtocol protocol = new RealChatProtocol();
+        User user = new RealUser(clientSocket, protocol);
         user.askUserName();
 
         Executors.newSingleThreadExecutor().submit(() -> {

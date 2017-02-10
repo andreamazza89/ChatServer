@@ -10,42 +10,42 @@ public class CommunicationProtocolShould {
     @Test
     public void encodeAUserName() {
         FakeUser gigi = new FakeUser("Gigi Sabani");
-        CommunicationProtocol protocol = new CommunicationProtocol();
+        ChatProtocol protocol = new RealChatProtocol();
 
         protocol.messageFrom(gigi);
 
-        assertThat(protocol.encode()).isEqualTo("~userName~Gigi Sabani~messageContent~");
+        assertThat(protocol.encodeMessage()).isEqualTo("~userName~Gigi Sabani~messageContent~");
     }
 
     @Test
     public void encodeAMessage() {
-        CommunicationProtocol protocol = new CommunicationProtocol();
+        ChatProtocol protocol = new RealChatProtocol();
 
-        protocol.withContent("sample message content");
+        protocol.addContent("sample message content");
 
-        assertThat(protocol.encode()).isEqualTo("~userName~~messageContent~sample message content");
+        assertThat(protocol.encodeMessage()).isEqualTo("~userName~~messageContent~sample message content");
     }
 
     @Test
     public void encodeUserNameAndMessage() {
         FakeUser gigi = new FakeUser("Gigi Sabani");
-        CommunicationProtocol protocol = new CommunicationProtocol();
+        ChatProtocol protocol = new RealChatProtocol();
 
-        protocol.messageFrom(gigi).withContent("Ciao da Napoli");
+        protocol.messageFrom(gigi).addContent("Ciao da Napoli");
 
-        assertThat(protocol.encode()).isEqualTo("~userName~Gigi Sabani~messageContent~Ciao da Napoli");
+        assertThat(protocol.encodeMessage()).isEqualTo("~userName~Gigi Sabani~messageContent~Ciao da Napoli");
     }
 
     @Test
     public void encodeMultipleTimes() {
         FakeUser gigi = new FakeUser("Gigi Sabani");
-        CommunicationProtocol protocol = new CommunicationProtocol();
+        ChatProtocol protocol = new RealChatProtocol();
 
         protocol.messageFrom(gigi);
-        String encodeOne = protocol.encode();
+        String encodeOne = protocol.encodeMessage();
 
-        protocol.withContent("Ciao da Milano");
-        String encodeTwo = protocol.encode();
+        protocol.addContent("Ciao da Milano");
+        String encodeTwo = protocol.encodeMessage();
 
         assertThat(encodeOne).isEqualTo("~userName~Gigi Sabani~messageContent~");
         assertThat(encodeTwo).isEqualTo("~userName~~messageContent~Ciao da Milano");
@@ -53,7 +53,7 @@ public class CommunicationProtocolShould {
 
     @Test
     public void decodeUserName() {
-        CommunicationProtocol protocol = new CommunicationProtocol();
+        ChatProtocol protocol = new RealChatProtocol();
         String encodedMessageOne = "~userName~Gigi Sabani~messageContent~Ciao da Napoli";
         String encodedMessageTwo = "~userName~Mara Venier~messageContent~Ciao da Napoli";
 
@@ -63,7 +63,7 @@ public class CommunicationProtocolShould {
 
     @Test
     public void decodeMessageContent() {
-        CommunicationProtocol protocol = new CommunicationProtocol();
+        ChatProtocol protocol = new RealChatProtocol();
         String encodedMessageOne = "~userName~Gigi Sabani~messageContent~Ciao da Napoli";
         String encodedMessageTwo = "~userName~Mara Venier~messageContent~Ciao da Milano";
 

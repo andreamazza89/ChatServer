@@ -6,10 +6,12 @@ public class RealUser implements User {
 
     private final BufferedReader clientOutputStream;
     private final PrintStream clientInputStream;
+    private final ChatProtocol protocol;
     private Notifiable chatRoom;
     private String userName;
 
-    RealUser(Connection clientSocket) {
+    RealUser(Connection clientSocket, ChatProtocol protocol) {
+        this.protocol = protocol;
         try {
             clientInputStream = new PrintStream(clientSocket.getOutputStream());
             clientOutputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -47,7 +49,8 @@ public class RealUser implements User {
 
     @Override
     public void askUserName() {
-        clientInputStream.println("Please enter your name");
+        String encodedQuestion = protocol.addContent("Please enter your name").encodeMessage();
+        clientInputStream.println(encodedQuestion);
         try {
             userName = clientOutputStream.readLine();
         } catch (IOException e) {
@@ -57,6 +60,7 @@ public class RealUser implements User {
 
     @Override
     public void greet() {
-        clientInputStream.println("Welcome to ChattyChat");
+        String encodedGreeting = protocol.addContent("Welcome to ChattyChat").encodeMessage();
+        clientInputStream.println(encodedGreeting);
     }
 }

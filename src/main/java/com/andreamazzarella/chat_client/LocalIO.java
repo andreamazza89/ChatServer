@@ -6,4 +6,5 @@ import java.io.OutputStream;
 public interface LocalIO {
     InputStream getInputStream();
     OutputStream getOutputStream();
+    void addMessage(String message);
 }

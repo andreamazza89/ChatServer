@@ -10,7 +10,7 @@ public class FakeLocalIO implements LocalIO {
 
     private PipedOutputStream pipedOutputStream;
     private PipedInputStream pipedInputStream;
-    private OutputStream outputStream = new MonitoredByteArrayOutputStream();
+    private OutputStream outputStream = new ByteArrayOutputStream();
 
     private CountDownLatch waitForMessage = new CountDownLatch(1);
 
@@ -33,6 +33,12 @@ public class FakeLocalIO implements LocalIO {
         return outputStream;
     }
 
+    @Override
+    public void addMessage(String message) {
+        new PrintStream(outputStream).println(message);
+        waitForMessage.countDown();
+    }
+
     public void waitForMessageThen(int timeOut, Runnable callBack) {
         try {
             waitForMessage.await(timeOut, TimeUnit.MILLISECONDS);
@@ -42,25 +48,15 @@ public class FakeLocalIO implements LocalIO {
         callBack.run();
     }
 
+    public String receivedMessages() {
+        return outputStream.toString();
+    }
+
     public void newMessage(String message) {
         try {
             pipedOutputStream.write(message.getBytes());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-
-    public String receivedMessages() {
-        return outputStream.toString();
-    }
-
-    private class MonitoredByteArrayOutputStream extends ByteArrayOutputStream {
-
-        @Override
-        public synchronized void write(byte[] b, int off, int len) {
-            waitForMessage.countDown();
-            super.write(b, off, len);
-        }
-
     }
 }

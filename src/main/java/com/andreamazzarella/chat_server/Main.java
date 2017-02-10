@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) {
         int portNumber = Integer.parseInt(args[0]);
-        ChatRoom chatRoom = new ChatRoom(new CommunicationProtocol());
+        ChatRoom chatRoom = new ChatRoom(new RealChatProtocol());
 
         start(chatRoom, portNumber);
     }
@@ -26,7 +26,7 @@ public class Main {
                 Socket rawSocket = serverSocket.accept();
 
                 connections.submit(() -> {
-                    User user = new RealUser(new ClientConnection(rawSocket));
+                    User user = new RealUser(new ClientConnection(rawSocket), new RealChatProtocol());
                     user.greet();
                     user.askUserName();
                     chatRoom.addSubscriber(user);
