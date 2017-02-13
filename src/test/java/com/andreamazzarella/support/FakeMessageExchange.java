@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class FakeLocalIO implements MessageExchange {
+public class FakeMessageExchange implements MessageExchange {
 
     private BufferedReader input;
     private PipedOutputStream pipedOutputStream;
@@ -14,7 +14,7 @@ public class FakeLocalIO implements MessageExchange {
 
     private CountDownLatch waitForMessage = new CountDownLatch(1);
 
-    public FakeLocalIO() {
+    public FakeMessageExchange() {
         this.pipedOutputStream = new PipedOutputStream();
         try {
             PipedInputStream pipedInputStream = new PipedInputStream(pipedOutputStream);

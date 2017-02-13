@@ -1,7 +1,7 @@
 package com.andreamazzarella.chat_server;
 
 import com.andreamazzarella.support.FakeChatRoom;
-import com.andreamazzarella.support.FakeSocket;
+import com.andreamazzarella.support.FakeMessageExchange;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ public class RealUserShould {
 
     @Test
     public void forwardAMessageToTheClient() throws IOException {
-        FakeSocket clientSocket = new FakeSocket();
+        FakeMessageExchange clientSocket = new FakeMessageExchange();
         User user = new RealUser(clientSocket, new RealChatProtocol());
 
         user.forward("sample line one");
@@ -26,7 +26,7 @@ public class RealUserShould {
 
     @Test
     public void notifyTheServerWhenItReceivesAMessageFromTheClient() throws IOException, InterruptedException {
-        FakeSocket clientSocket = new FakeSocket();
+        FakeMessageExchange clientSocket = new FakeMessageExchange();
         User user = new RealUser(clientSocket, new RealChatProtocol());
         FakeChatRoom chatRoom = new FakeChatRoom();
         chatRoom.addSubscriber(user);
@@ -42,7 +42,7 @@ public class RealUserShould {
 
     @Test
     public void beAbleToBothReceiveAndSendMessages() throws InterruptedException, IOException {
-        FakeSocket clientSocket = new FakeSocket();
+        FakeMessageExchange clientSocket = new FakeMessageExchange();
         FakeChatRoom chatRoom = new FakeChatRoom();
         User user = new RealUser(clientSocket, new RealChatProtocol());
         chatRoom.addSubscriber(user);
@@ -61,7 +61,7 @@ public class RealUserShould {
 
     @Test
     public void greetTheUser() {
-        FakeSocket clientSocket = new FakeSocket();
+        FakeMessageExchange clientSocket = new FakeMessageExchange();
         ChatProtocol protocol = new RealChatProtocol();
         User user = new RealUser(clientSocket, protocol);
 
@@ -73,7 +73,7 @@ public class RealUserShould {
 
     @Test
     public void askTheUserName() {
-        FakeSocket clientSocket = new FakeSocket();
+        FakeMessageExchange clientSocket = new FakeMessageExchange();
         ChatProtocol protocol = new RealChatProtocol();
         User user = new RealUser(clientSocket, protocol);
 
@@ -87,7 +87,7 @@ public class RealUserShould {
 
     @Test
     public void registerTheUserName() {
-        FakeSocket clientSocket = new FakeSocket();
+        FakeMessageExchange clientSocket = new FakeMessageExchange();
         clientSocket.newMessage("Andrea\n");
         ChatProtocol protocol = new RealChatProtocol();
         User user = new RealUser(clientSocket, protocol);

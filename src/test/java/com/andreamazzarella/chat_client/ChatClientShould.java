@@ -1,7 +1,6 @@
 package com.andreamazzarella.chat_client;
 
-import com.andreamazzarella.support.FakeLocalIO;
-import com.andreamazzarella.support.FakeSocket;
+import com.andreamazzarella.support.FakeMessageExchange;
 import org.junit.Test;
 
 import java.io.*;
@@ -13,8 +12,8 @@ public class ChatClientShould {
 
     @Test
     public void passMessageReceivedFromSocketToLocalIO() throws InterruptedException, IOException {
-        FakeLocalIO localIO = new FakeLocalIO();
-        FakeSocket remoteSocket = new FakeSocket();
+        FakeMessageExchange localIO = new FakeMessageExchange();
+        FakeMessageExchange remoteSocket = new FakeMessageExchange();
 
         ChatClient chatClient = new ChatClient(localIO, remoteSocket);
         Executors.newSingleThreadExecutor().submit(chatClient::startCommunication);
@@ -25,8 +24,8 @@ public class ChatClientShould {
 
     @Test
     public void passMessageReceivedFromLocalIOToSocket() throws InterruptedException, IOException {
-        FakeLocalIO localIO = new FakeLocalIO();
-        FakeSocket remoteSocket = new FakeSocket();
+        FakeMessageExchange localIO = new FakeMessageExchange();
+        FakeMessageExchange remoteSocket = new FakeMessageExchange();
 
         ChatClient chatClient = new ChatClient(localIO, remoteSocket);
         Executors.newSingleThreadExecutor().submit(chatClient::startCommunication);
@@ -37,8 +36,8 @@ public class ChatClientShould {
 
     @Test
     public void passMessagesInBothDirectionsAtTheSameTime() {
-        FakeLocalIO localIO = new FakeLocalIO();
-        FakeSocket remoteSocket = new FakeSocket();
+        FakeMessageExchange localIO = new FakeMessageExchange();
+        FakeMessageExchange remoteSocket = new FakeMessageExchange();
 
         ChatClient chatClient = new ChatClient(localIO, remoteSocket);
         Executors.newSingleThreadExecutor().submit(chatClient::startCommunication);
