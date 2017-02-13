@@ -3,7 +3,7 @@ package com.andreamazzarella.chat_client;
 import com.andreamazzarella.support.FakeMessageExchange;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertEquals;
