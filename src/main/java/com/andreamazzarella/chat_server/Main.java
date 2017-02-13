@@ -1,5 +1,8 @@
 package com.andreamazzarella.chat_server;
 
+import com.andreamazzarella.chat_application.ClientConnection;
+import com.andreamazzarella.chat_application.RealChatProtocol;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.ServerSocket;
@@ -10,13 +13,13 @@ import java.util.concurrent.Executors;
 public class Main {
 
     public static void main(String[] args) {
-        ChatRoom chatRoom = new ChatRoom();
         int portNumber = Integer.parseInt(args[0]);
+        ChatRoom chatRoom = new ChatRoom(new RealChatProtocol());
 
         start(chatRoom, portNumber);
     }
 
-    static void start(ChatRoom chatRoom, int portNumber) {
+    private static void start(ChatRoom chatRoom, int portNumber) {
         System.out.println("Server running on port " + portNumber);
         ExecutorService connections = Executors.newCachedThreadPool();
 
@@ -26,9 +29,11 @@ public class Main {
                 Socket rawSocket = serverSocket.accept();
 
                 connections.submit(() -> {
-                    MessageExchanger messageExchanger = new MessageExchanger(new ClientConnection(rawSocket), chatRoom);
-                    chatRoom.addSubscriber(messageExchanger);
-                    messageExchanger.startListening();
+                    User user = new RealUser(new ClientConnection(rawSocket), new RealChatProtocol());
+                    user.greet();
+                    user.askUserName();
+                    chatRoom.addSubscriber(user);
+                    user.startConversation();
                 });
             } catch (IOException e) {
                 throw new UncheckedIOException(e);

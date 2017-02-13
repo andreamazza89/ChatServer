@@ -1,6 +1,8 @@
 package com.andreamazzarella.chat_server;
 
-import com.andreamazzarella.chat_server.support.FakeClientSocket;
+import com.andreamazzarella.chat_application.ChatProtocol;
+import com.andreamazzarella.chat_application.RealChatProtocol;
+import com.andreamazzarella.support.FakeUser;
 import org.junit.Test;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -8,50 +10,47 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 public class ChatRoomShould {
 
     @Test
-    public void passAMessageToAllClientsButTheOneWhoSentIt() {
-        ChatRoom chatRoom = new ChatRoom();
-        FakeClientSocket socketOne = new FakeClientSocket();
-        FakeClientSocket socketTwo = new FakeClientSocket();
-        FakeClientSocket socketThree = new FakeClientSocket();
-        MessageExchanger messageExchangerOne = new MessageExchanger(socketOne, chatRoom);
-        MessageExchanger messageExchangerTwo = new MessageExchanger(socketTwo, chatRoom);
-        MessageExchanger messageExchangerThree = new MessageExchanger(socketThree, chatRoom);
-        chatRoom.addSubscriber(messageExchangerOne);
-        chatRoom.addSubscriber(messageExchangerTwo);
-        chatRoom.addSubscriber(messageExchangerThree);
+    public void encodeMessageAndPassToAllClientsButTheOneWhoSentIt() {
+        ChatProtocol protocol = new RealChatProtocol();
+        ChatRoom chatRoom = new ChatRoom(protocol);
+        FakeUser andrea = new FakeUser("andrea");
+        FakeUser maria = new FakeUser("giorgio");
+        chatRoom.addSubscriber(andrea);
+        chatRoom.addSubscriber(maria);
 
-        chatRoom.notifyMessageFromClient("Hello from Socket One!", messageExchangerOne);
+        chatRoom.notifyMessageFromClient("Hello from andrea!", andrea);
 
-        assertThat(socketOne.receivedMessages()).isEqualTo("");
-        assertThat(socketTwo.receivedMessages()).isEqualTo("Hello from Socket One!\n");
-        assertThat(socketThree.receivedMessages()).isEqualTo("Hello from Socket One!\n");
+        String encodedMessage = protocol.messageFrom(andrea).addContent("Hello from andrea!").encodeMessage();
+        assertThat(andrea.receivedMessage()).isEqualTo("");
+        assertThat(maria.receivedMessage()).isEqualTo(encodedMessage);
     }
 
     @Test
     public void passMessagesToAllClientsButTheOneWhoSentIt() {
-        ChatRoom chatRoom = new ChatRoom();
-        FakeClientSocket socketOne = new FakeClientSocket();
-        FakeClientSocket socketTwo = new FakeClientSocket();
-        MessageExchanger messageExchangerOne = new MessageExchanger(socketOne, chatRoom);
-        MessageExchanger messageExchangerTwo = new MessageExchanger(socketTwo, chatRoom);
-        chatRoom.addSubscriber(messageExchangerOne);
-        chatRoom.addSubscriber(messageExchangerTwo);
+        ChatProtocol protocol = new RealChatProtocol();
+        ChatRoom chatRoom = new ChatRoom(protocol);
+        FakeUser andrea = new FakeUser("andrea");
+        FakeUser maria = new FakeUser("giorgio");
+        chatRoom.addSubscriber(andrea);
+        chatRoom.addSubscriber(maria);
 
-        chatRoom.notifyMessageFromClient("Hello from Socket One!", messageExchangerOne);
-        chatRoom.notifyMessageFromClient("Hello from Socket Two!", messageExchangerTwo);
+        chatRoom.notifyMessageFromClient("Hello from andrea!", andrea);
+        chatRoom.notifyMessageFromClient("Hello from maria!", maria);
 
-        assertThat(socketOne.receivedMessages()).isEqualTo("Hello from Socket Two!\n");
-        assertThat(socketTwo.receivedMessages()).isEqualTo("Hello from Socket One!\n");
+        String encodedMessageFromAndrea = protocol.messageFrom(andrea).addContent("Hello from andrea!").encodeMessage();
+        String encodedMessageFromMaria = protocol.messageFrom(maria).addContent("Hello from maria!").encodeMessage();
+        assertThat(andrea.receivedMessage()).isEqualTo(encodedMessageFromMaria);
+        assertThat(maria.receivedMessage()).isEqualTo(encodedMessageFromAndrea);
     }
 
     @Test
-    public void provideAListOfConnectedClients() {
-        ChatRoom chatRoom = new ChatRoom();
-        FakeClientSocket socket = new FakeClientSocket();
-        MessageExchanger messageExchanger = new MessageExchanger(socket, chatRoom);
+    public void subscribeItselfToTheUser() {
+        ChatRoom chatRoom = new ChatRoom(new RealChatProtocol());
+        FakeUser andrea = new FakeUser("andrea");
 
-        chatRoom.addSubscriber(messageExchanger);
+        chatRoom.addSubscriber(andrea);
 
-        assertThat(chatRoom.connectedClients().get(0)).isEqualTo(messageExchanger);
+        assertThat(andrea.subscribeToRoomWasCalled()).isTrue();
+        assertThat(andrea.subscribeToRoomWasCalledWith()).isEqualTo(chatRoom);
     }
 }
