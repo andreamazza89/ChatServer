@@ -1,5 +1,7 @@
 package com.andreamazzarella.chat_server;
 
+import com.andreamazzarella.chat_application.ClientConnection;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.ServerSocket;

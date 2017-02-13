@@ -1,12 +1,12 @@
 package com.andreamazzarella.support;
 
-import com.andreamazzarella.chat_client.LocalIO;
+import com.andreamazzarella.chat_application.MessageExchange;
 
 import java.io.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class FakeLocalIO implements LocalIO {
+public class FakeLocalIO implements MessageExchange {
 
     private BufferedReader input;
     private PipedOutputStream pipedOutputStream;
@@ -25,13 +25,13 @@ public class FakeLocalIO implements LocalIO {
     }
 
     @Override
-    public void displayMessage(String message) {
+    public void sendMessage(String message) {
         new PrintStream(outputStream).print(message);
         waitForMessage.countDown();
     }
 
     @Override
-    public String readLine() {
+    public String readMessage() {
         try {
             return input.readLine();
         } catch (IOException e) {

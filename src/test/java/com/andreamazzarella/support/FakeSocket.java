@@ -1,13 +1,12 @@
 package com.andreamazzarella.support;
 
-import com.andreamazzarella.chat_server.Connection;
+import com.andreamazzarella.chat_application.MessageExchange;
 
 import java.io.*;
-import java.net.SocketAddress;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class FakeSocket implements Connection {
+public class FakeSocket implements MessageExchange {
 
     private PipedOutputStream pipedOutputStream;
     private PipedInputStream pipedInputStream;
@@ -25,11 +24,6 @@ public class FakeSocket implements Connection {
     }
 
     @Override
-    public void connect(SocketAddress serverAddress) throws IOException {
-        // pretend it just made a connection
-    }
-
-    @Override
     public void sendMessage(String message) {
         try {
             outputStream.write(message.getBytes());
@@ -39,7 +33,7 @@ public class FakeSocket implements Connection {
     }
 
     @Override
-    public String readLine() {
+    public String readMessage() {
         try {
             return new BufferedReader(new InputStreamReader(pipedInputStream)).readLine();
         } catch (IOException e) {

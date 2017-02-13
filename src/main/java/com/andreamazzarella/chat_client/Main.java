@@ -1,7 +1,7 @@
 package com.andreamazzarella.chat_client;
 
-import com.andreamazzarella.chat_server.ClientConnection;
-import com.andreamazzarella.chat_server.Connection;
+import com.andreamazzarella.chat_application.MessageExchange;
+import com.andreamazzarella.chat_application.ClientConnection;
 import com.andreamazzarella.chat_server.RealChatProtocol;
 
 import java.io.IOException;
@@ -29,8 +29,8 @@ public class Main {
         ////////// says goodbye before disconnecting(TO DO) /////////////////
         ///////////////////////////////////////////////////////////////////
 
-        Connection connection = new ClientConnection(rawSocket);
-        LocalIO localIO = new Console(System.in, System.out, new RealChatProtocol());
+        MessageExchange connection = new ClientConnection(rawSocket);
+        MessageExchange localIO = new Console(System.in, System.out, new RealChatProtocol());
 
         new ChatClient(localIO, connection).startCommunication();
     }

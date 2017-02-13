@@ -1,18 +1,15 @@
-package com.andreamazzarella.chat_server;
+package com.andreamazzarella.chat_application;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketAddress;
 
 
-public class ClientConnection implements Connection {
+public class ClientConnection implements MessageExchange {
 
-    private final Socket rawClientSocket;
     private final BufferedReader reader;
     private final PrintStream writer;
 
     public ClientConnection(Socket rawClientSocket) {
-        this.rawClientSocket = rawClientSocket;
         try {
             this.reader = new BufferedReader(new InputStreamReader(rawClientSocket.getInputStream()));
             this.writer = new PrintStream(rawClientSocket.getOutputStream());
@@ -27,16 +24,11 @@ public class ClientConnection implements Connection {
     }
 
     @Override
-    public String readLine() {
+    public String readMessage() {
         try {
             return reader.readLine();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-
-    @Override
-    public void connect(SocketAddress serverAddress) throws IOException {
-        rawClientSocket.connect(serverAddress);
     }
 }

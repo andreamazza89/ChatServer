@@ -1,5 +1,6 @@
 package com.andreamazzarella.chat_client;
 
+import com.andreamazzarella.chat_application.MessageExchange;
 import com.andreamazzarella.chat_server.RealChatProtocol;
 import com.andreamazzarella.chat_server.ChatProtocol;
 import org.junit.Test;
@@ -18,9 +19,9 @@ public class ConsoleShould {
         ByteArrayOutputStream consoleOutput = new ByteArrayOutputStream();
 
         ChatProtocol protocol = new RealChatProtocol();
-        LocalIO console = new Console(new ByteArrayInputStream("".getBytes()), consoleOutput, protocol);
+        MessageExchange console = new Console(new ByteArrayInputStream("".getBytes()), consoleOutput, protocol);
 
-        console.displayMessage("~userName~Andrea~messageContent~Ciao!");
+        console.sendMessage("~userName~Andrea~messageContent~Ciao!");
 
         assertThat(consoleOutput.toString()).isEqualTo("Andrea: Ciao!\n");
     }

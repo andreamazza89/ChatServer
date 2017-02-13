@@ -1,16 +1,15 @@
 package com.andreamazzarella.chat_client;
 
-import com.andreamazzarella.chat_server.Connection;
+import com.andreamazzarella.chat_application.MessageExchange;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 class ChatClient {
-    private final LocalIO localIO;
+    private final MessageExchange localIO;
+    private final MessageExchange remoteSocket;
 
-    private final Connection remoteSocket;
-
-    ChatClient(LocalIO localIO, Connection remoteSocket) {
+    ChatClient(MessageExchange localIO, MessageExchange remoteSocket) {
        this.localIO = localIO;
        this.remoteSocket = remoteSocket;
     }
@@ -24,15 +23,15 @@ class ChatClient {
 
     private void sendOutgoingMessages() {
         String messageReceived;
-        while ((messageReceived = localIO.readLine()) != null) {
+        while ((messageReceived = localIO.readMessage()) != null) {
             remoteSocket.sendMessage(messageReceived);
         }
     }
 
     private void decodeIncomingMessages() {
         String rawMessageReceived;
-        while ((rawMessageReceived = remoteSocket.readLine()) != null) {
-            localIO.displayMessage(rawMessageReceived);
+        while ((rawMessageReceived = remoteSocket.readMessage()) != null) {
+            localIO.sendMessage(rawMessageReceived);
         }
     }
 }

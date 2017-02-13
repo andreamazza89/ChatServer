@@ -1,13 +1,15 @@
 package com.andreamazzarella.chat_server;
 
+import com.andreamazzarella.chat_application.MessageExchange;
+
 public class RealUser implements User {
 
     private final ChatProtocol protocol;
-    private final Connection userSocket;
+    private final MessageExchange userSocket;
     private Notifiable chatRoom;
     private String userName;
 
-    RealUser(Connection clientSocket, ChatProtocol protocol) {
+    RealUser(MessageExchange clientSocket, ChatProtocol protocol) {
         this.protocol = protocol;
         this.userSocket = clientSocket;
     }
@@ -25,7 +27,7 @@ public class RealUser implements User {
     @Override
     public void startConversation() {
         String message_received;
-        while ((message_received = userSocket.readLine()) != null) {
+        while ((message_received = userSocket.readMessage()) != null) {
             chatRoom.notifyMessageFromClient(message_received, this);
         }
     }
@@ -39,7 +41,7 @@ public class RealUser implements User {
     public void askUserName() {
         String encodedQuestion = protocol.addContent("Please enter your name").encodeMessage();
         userSocket.sendMessage(encodedQuestion);
-        userName = userSocket.readLine();
+        userName = userSocket.readMessage();
     }
 
     @Override
