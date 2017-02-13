@@ -11,11 +11,9 @@ public class Main {
     public static void main(String[] args) {
         String serverAddress = args[0];
         int serverPort = Integer.parseInt(args[1]);
-
-        /////////////////////////////// ?Session?: takes the localIO to let the user know what is going on and either
-        /////////////////////////////////returns a socket or exits
-        System.out.println("Welcome to the ChattyChat; tryihng to connect to server on port " + serverPort);
         Socket rawSocket = null;
+
+        System.out.println("Welcome to the ChattyChat; trying to connect to server on port " + serverPort);
         try {
             rawSocket = new Socket(serverAddress, serverPort);
         } catch (IOException e) {
@@ -23,9 +21,6 @@ public class Main {
             System.exit(1);
         }
         System.out.println("Connected to server!");
-        ///////////////////////////////////////////////////////////////////
-        ////////// says goodbye before disconnecting(TO DO) /////////////////
-        ///////////////////////////////////////////////////////////////////
 
         MessageExchange connection = new ClientConnection(rawSocket);
         MessageExchange localIO = new Console(System.in, System.out, new RealChatProtocol());
