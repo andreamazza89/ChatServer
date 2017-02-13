@@ -1,12 +1,17 @@
 package com.andreamazzarella.chat_server;
 
+import com.andreamazzarella.chat_application.ChatProtocol;
 import com.andreamazzarella.chat_application.MessageExchange;
 
 public class RealUser implements User {
 
+    private final static String GREETING = "Welcome to ChattyChat";
+    private final static String ASK_FOR_NAME = "Please enter your name";
+
     private final ChatProtocol protocol;
     private final MessageExchange userSocket;
     private Notifiable chatRoom;
+
     private String userName;
 
     RealUser(MessageExchange clientSocket, ChatProtocol protocol) {
@@ -39,14 +44,14 @@ public class RealUser implements User {
 
     @Override
     public void askUserName() {
-        String encodedQuestion = protocol.addContent("Please enter your name").encodeMessage();
+        String encodedQuestion = protocol.addContent(ASK_FOR_NAME).encodeMessage();
         userSocket.sendMessage(encodedQuestion);
         userName = userSocket.readMessage();
     }
 
     @Override
     public void greet() {
-        String encodedGreeting = protocol.addContent("Welcome to ChattyChat").encodeMessage();
+        String encodedGreeting = protocol.addContent(GREETING).encodeMessage();
         userSocket.sendMessage(encodedGreeting);
     }
 }

@@ -3,7 +3,6 @@ package com.andreamazzarella.chat_application;
 import java.io.*;
 import java.net.Socket;
 
-
 public class ClientConnection implements MessageExchange {
 
     private final BufferedReader reader;

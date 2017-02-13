@@ -1,5 +1,7 @@
 package com.andreamazzarella.chat_server;
 
+import com.andreamazzarella.chat_application.ChatProtocol;
+import com.andreamazzarella.chat_application.RealChatProtocol;
 import com.andreamazzarella.support.FakeUser;
 import org.junit.Test;
 

@@ -1,6 +1,7 @@
 package com.andreamazzarella.chat_server;
 
 import com.andreamazzarella.chat_application.ClientConnection;
+import com.andreamazzarella.chat_application.RealChatProtocol;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -18,7 +19,7 @@ public class Main {
         start(chatRoom, portNumber);
     }
 
-    static void start(ChatRoom chatRoom, int portNumber) {
+    private static void start(ChatRoom chatRoom, int portNumber) {
         System.out.println("Server running on port " + portNumber);
         ExecutorService connections = Executors.newCachedThreadPool();
 

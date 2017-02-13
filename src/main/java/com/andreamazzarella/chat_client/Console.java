@@ -1,19 +1,19 @@
 package com.andreamazzarella.chat_client;
 
 import com.andreamazzarella.chat_application.MessageExchange;
-import com.andreamazzarella.chat_server.ChatProtocol;
+import com.andreamazzarella.chat_application.ChatProtocol;
 
 import java.io.*;
 
 public class Console implements MessageExchange {
 
-    private final BufferedReader input;
-    private final PrintStream output;
+    private final BufferedReader localInput;
+    private final PrintStream localOutput;
     private final ChatProtocol protocol;
 
-    Console(InputStream input, OutputStream output, ChatProtocol protocol) {
-        this.input = new BufferedReader(new InputStreamReader(input));
-        this.output = new PrintStream(output);
+    Console(InputStream localInput, OutputStream localOutput, ChatProtocol protocol) {
+        this.localInput = new BufferedReader(new InputStreamReader(localInput));
+        this.localOutput = new PrintStream(localOutput);
         this.protocol = protocol;
     }
 
@@ -21,13 +21,22 @@ public class Console implements MessageExchange {
     public void sendMessage(String rawMessage) {
         String userName = protocol.decodeUserName(rawMessage);
         String content = protocol.decodeMessageContent(rawMessage);
-        output.println(userName + ": " + content);
+        String formattedOutput = prettyPrint(userName, content);
+        localOutput.println(formattedOutput);
+    }
+
+    private String prettyPrint(String userName, String content) {
+        if (userName.equals("")) {
+            return content;
+        } else {
+            return userName + ": " + content;
+        }
     }
 
     @Override
     public String readMessage() {
         try {
-            return input.readLine();
+            return localInput.readLine();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

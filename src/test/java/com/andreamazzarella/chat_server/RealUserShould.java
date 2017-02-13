@@ -1,5 +1,7 @@
 package com.andreamazzarella.chat_server;
 
+import com.andreamazzarella.chat_application.ChatProtocol;
+import com.andreamazzarella.chat_application.RealChatProtocol;
 import com.andreamazzarella.support.FakeChatRoom;
 import com.andreamazzarella.support.FakeMessageExchange;
 import org.junit.Test;
@@ -93,8 +95,6 @@ public class RealUserShould {
         User user = new RealUser(clientSocket, protocol);
         user.askUserName();
 
-        Executors.newSingleThreadExecutor().submit(() -> {
-            assertThat(user.getUserName()).isEqualTo("Andrea");
-        });
+        Executors.newSingleThreadExecutor().submit(() -> assertThat(user.getUserName()).isEqualTo("Andrea"));
     }
 }

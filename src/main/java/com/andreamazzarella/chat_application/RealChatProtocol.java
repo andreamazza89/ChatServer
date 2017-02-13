@@ -1,4 +1,6 @@
-package com.andreamazzarella.chat_server;
+package com.andreamazzarella.chat_application;
+
+import com.andreamazzarella.chat_server.User;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,7 +53,7 @@ public class RealChatProtocol implements ChatProtocol {
 
     @Override
     public String decodeUserName(String encodedMessage) {
-        Pattern userNamePattern = Pattern.compile(".*" + "~userName~" + "([^~]*)" + ".*");
+        Pattern userNamePattern = Pattern.compile(".*" + USERNAME_FLAG + "([^~]*)" + ".*");
         Matcher matcher = userNamePattern.matcher(encodedMessage);
         matcher.matches();
 
@@ -60,7 +62,7 @@ public class RealChatProtocol implements ChatProtocol {
 
     @Override
     public String decodeMessageContent(String encodedMessage) {
-        Pattern messageContentPattern = Pattern.compile(".*" + "~messageContent~" + "([^~]*)" + ".*");
+        Pattern messageContentPattern = Pattern.compile(".*" + MESSAGE_CONTENT_FLAG + "([^~]*)" + ".*");
         Matcher matcher = messageContentPattern.matcher(encodedMessage);
         matcher.matches();
 

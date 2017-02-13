@@ -2,7 +2,7 @@ package com.andreamazzarella.chat_client;
 
 import com.andreamazzarella.chat_application.MessageExchange;
 import com.andreamazzarella.chat_application.ClientConnection;
-import com.andreamazzarella.chat_server.RealChatProtocol;
+import com.andreamazzarella.chat_application.RealChatProtocol;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -11,8 +11,6 @@ public class Main {
     public static void main(String[] args) {
         String serverAddress = args[0];
         int serverPort = Integer.parseInt(args[1]);
-
-
 
         /////////////////////////////// ?Session?: takes the localIO to let the user know what is going on and either
         /////////////////////////////////returns a socket or exits

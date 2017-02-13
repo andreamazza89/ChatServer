@@ -17,21 +17,14 @@ class ChatClient {
     void startCommunication() {
         ExecutorService sendReceivePool = Executors.newFixedThreadPool(2);
 
-        sendReceivePool.submit(this::sendOutgoingMessages);
-        sendReceivePool.submit(this::decodeIncomingMessages);
+        sendReceivePool.submit(() -> pipeMessages(localIO, remoteSocket));
+        sendReceivePool.submit(() -> pipeMessages(remoteSocket, localIO));
     }
 
-    private void sendOutgoingMessages() {
+    private void pipeMessages(MessageExchange from, MessageExchange to) {
         String messageReceived;
-        while ((messageReceived = localIO.readMessage()) != null) {
-            remoteSocket.sendMessage(messageReceived);
-        }
-    }
-
-    private void decodeIncomingMessages() {
-        String rawMessageReceived;
-        while ((rawMessageReceived = remoteSocket.readMessage()) != null) {
-            localIO.sendMessage(rawMessageReceived);
+        while ((messageReceived = from.readMessage()) != null) {
+            to.sendMessage(messageReceived);
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.andreamazzarella.chat_server;
 
+import com.andreamazzarella.chat_application.ChatProtocol;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,7 @@ public class ChatRoom implements Notifiable {
     private final ChatProtocol protocol;
     private List<User> usersSubscribedToRoom = new ArrayList<>();
 
-    public ChatRoom(ChatProtocol protocol) {
+    ChatRoom(ChatProtocol protocol) {
         this.protocol = protocol;
     }
 
@@ -27,5 +29,4 @@ public class ChatRoom implements Notifiable {
         usersSubscribedToRoom.add(user);
         user.subscribeToRoom(this);
     }
-
 }
