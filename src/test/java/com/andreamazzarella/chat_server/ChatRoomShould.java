@@ -1,7 +1,6 @@
 package com.andreamazzarella.chat_server;
 
 import com.andreamazzarella.chat_application.ChatProtocol;
-import com.andreamazzarella.chat_application.RealChatProtocol;
 import com.andreamazzarella.support.FakeUser;
 import org.junit.Test;
 
@@ -11,7 +10,7 @@ public class ChatRoomShould {
 
     @Test
     public void encodeMessageAndPassToAllClientsButTheOneWhoSentIt() {
-        ChatProtocol protocol = new RealChatProtocol();
+        ChatProtocol protocol = new ChatProtocol();
         ChatRoom chatRoom = new ChatRoom(protocol);
         FakeUser andrea = new FakeUser("andrea");
         FakeUser maria = new FakeUser("giorgio");
@@ -27,7 +26,7 @@ public class ChatRoomShould {
 
     @Test
     public void passMessagesToAllClientsButTheOneWhoSentIt() {
-        ChatProtocol protocol = new RealChatProtocol();
+        ChatProtocol protocol = new ChatProtocol();
         ChatRoom chatRoom = new ChatRoom(protocol);
         FakeUser andrea = new FakeUser("andrea");
         FakeUser maria = new FakeUser("giorgio");
@@ -45,7 +44,7 @@ public class ChatRoomShould {
 
     @Test
     public void subscribeItselfToTheUser() {
-        ChatRoom chatRoom = new ChatRoom(new RealChatProtocol());
+        ChatRoom chatRoom = new ChatRoom(new ChatProtocol());
         FakeUser andrea = new FakeUser("andrea");
 
         chatRoom.addSubscriber(andrea);

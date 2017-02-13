@@ -1,7 +1,7 @@
 package com.andreamazzarella.chat_server;
 
 import com.andreamazzarella.chat_application.ChatProtocol;
-import com.andreamazzarella.chat_application.RealChatProtocol;
+import com.andreamazzarella.chat_application.ChatProtocol;
 import com.andreamazzarella.support.FakeUser;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ public class CommunicationProtocolShould {
     @Test
     public void encodeAUserName() {
         FakeUser gigi = new FakeUser("Gigi Sabani");
-        ChatProtocol protocol = new RealChatProtocol();
+        ChatProtocol protocol = new ChatProtocol();
 
         protocol.messageFrom(gigi);
 
@@ -21,7 +21,7 @@ public class CommunicationProtocolShould {
 
     @Test
     public void encodeAMessage() {
-        ChatProtocol protocol = new RealChatProtocol();
+        ChatProtocol protocol = new ChatProtocol();
 
         protocol.addContent("sample message content");
 
@@ -31,7 +31,7 @@ public class CommunicationProtocolShould {
     @Test
     public void encodeUserNameAndMessage() {
         FakeUser gigi = new FakeUser("Gigi Sabani");
-        ChatProtocol protocol = new RealChatProtocol();
+        ChatProtocol protocol = new ChatProtocol();
 
         protocol.messageFrom(gigi).addContent("Ciao da Napoli");
 
@@ -41,7 +41,7 @@ public class CommunicationProtocolShould {
     @Test
     public void encodeMultipleTimes() {
         FakeUser gigi = new FakeUser("Gigi Sabani");
-        ChatProtocol protocol = new RealChatProtocol();
+        ChatProtocol protocol = new ChatProtocol();
 
         protocol.messageFrom(gigi);
         String encodeOne = protocol.encodeMessage();
@@ -55,7 +55,7 @@ public class CommunicationProtocolShould {
 
     @Test
     public void decodeUserName() {
-        ChatProtocol protocol = new RealChatProtocol();
+        ChatProtocol protocol = new ChatProtocol();
         String encodedMessageOne = "~userName~Gigi Sabani~messageContent~Ciao da Napoli";
         String encodedMessageTwo = "~userName~Mara Venier~messageContent~Ciao da Napoli";
 
@@ -65,7 +65,7 @@ public class CommunicationProtocolShould {
 
     @Test
     public void decodeMessageContent() {
-        ChatProtocol protocol = new RealChatProtocol();
+        ChatProtocol protocol = new ChatProtocol();
         String encodedMessageOne = "~userName~Gigi Sabani~messageContent~Ciao da Napoli";
         String encodedMessageTwo = "~userName~Mara Venier~messageContent~Ciao da Milano";
 

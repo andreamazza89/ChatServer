@@ -1,7 +1,7 @@
 package com.andreamazzarella.chat_server;
 
 import com.andreamazzarella.chat_application.ClientConnection;
-import com.andreamazzarella.chat_application.RealChatProtocol;
+import com.andreamazzarella.chat_application.ChatProtocol;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -14,7 +14,7 @@ public class Main {
 
     public static void main(String[] args) {
         int portNumber = Integer.parseInt(args[0]);
-        ChatRoom chatRoom = new ChatRoom(new RealChatProtocol());
+        ChatRoom chatRoom = new ChatRoom(new ChatProtocol());
 
         start(chatRoom, portNumber);
     }
@@ -29,7 +29,7 @@ public class Main {
                 Socket rawSocket = serverSocket.accept();
 
                 connections.submit(() -> {
-                    User user = new RealUser(new ClientConnection(rawSocket), new RealChatProtocol());
+                    User user = new RealUser(new ClientConnection(rawSocket), new ChatProtocol());
                     user.greet();
                     user.askUserName();
                     chatRoom.addSubscriber(user);

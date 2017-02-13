@@ -1,7 +1,6 @@
 package com.andreamazzarella.chat_client;
 
 import com.andreamazzarella.chat_application.MessageExchange;
-import com.andreamazzarella.chat_application.RealChatProtocol;
 import com.andreamazzarella.chat_application.ChatProtocol;
 import com.andreamazzarella.support.FakeUser;
 import org.junit.Test;
@@ -21,7 +20,7 @@ public class ConsoleShould {
     @Test
     public void FormatANDPrintAMessageWithUserAndContent() {
         ByteArrayOutputStream consoleOutput = new ByteArrayOutputStream();
-        ChatProtocol protocol = new RealChatProtocol();
+        ChatProtocol protocol = new ChatProtocol();
         FakeUser andrea = new FakeUser("Andrea");
         String encodedMessage = protocol.messageFrom(andrea).addContent("Ciao!").encodeMessage();
         MessageExchange console = new Console(new ByteArrayInputStream("".getBytes()), consoleOutput, protocol);
@@ -35,7 +34,7 @@ public class ConsoleShould {
     @Test
     public void FormatANDPrintAMessageWithContentOnly() {
         ByteArrayOutputStream consoleOutput = new ByteArrayOutputStream();
-        ChatProtocol protocol = new RealChatProtocol();
+        ChatProtocol protocol = new ChatProtocol();
         String encodedMessage = protocol.addContent("This is a message with no user name").encodeMessage();
         MessageExchange console = new Console(new ByteArrayInputStream("".getBytes()), consoleOutput, protocol);
 
