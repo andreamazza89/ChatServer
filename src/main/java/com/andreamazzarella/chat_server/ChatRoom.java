@@ -16,7 +16,10 @@ public class ChatRoom implements Notifiable {
 
     @Override
     public void notifyMessageFromClient(String rawMessage, User sender) {
+        // add message to repo (user, content)
+
         String encodedMessage = protocol.messageFrom(sender).addContent(rawMessage).encodeMessage();
+
         for (User user : usersSubscribedToRoom) {
             if (user != sender) {
                 user.forward(encodedMessage);
@@ -28,5 +31,8 @@ public class ChatRoom implements Notifiable {
     public void addSubscriber(User user) {
         usersSubscribedToRoom.add(user);
         user.subscribeToRoom(this);
+
+        //InMemoryMessageHistoryRepository.all_messages() -> send these to the user
+
     }
 }
