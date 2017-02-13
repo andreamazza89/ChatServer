@@ -17,7 +17,7 @@ public class Console implements LocalIO {
     }
 
     @Override
-    public void addMessage(String rawMessage) {
+    public void displayMessage(String rawMessage) {
         String userName = protocol.decodeUserName(rawMessage);
         String content = protocol.decodeMessageContent(rawMessage);
         output.println(userName + ": " + content);

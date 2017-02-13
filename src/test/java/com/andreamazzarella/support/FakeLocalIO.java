@@ -25,8 +25,8 @@ public class FakeLocalIO implements LocalIO {
     }
 
     @Override
-    public void addMessage(String message) {
-        new PrintStream(outputStream).println(message);
+    public void displayMessage(String message) {
+        new PrintStream(outputStream).print(message);
         waitForMessage.countDown();
     }
 
@@ -48,7 +48,7 @@ public class FakeLocalIO implements LocalIO {
         callBack.run();
     }
 
-    public String receivedMessages() {
+    public String receivedMessage() {
         return outputStream.toString();
     }
 

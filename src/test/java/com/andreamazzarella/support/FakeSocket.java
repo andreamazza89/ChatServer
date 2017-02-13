@@ -30,13 +30,21 @@ public class FakeSocket implements Connection {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
-        return pipedInputStream;
+    public void sendMessage(String message) {
+        try {
+            outputStream.write(message.getBytes());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     @Override
-    public OutputStream getOutputStream() {
-        return outputStream;
+    public String readLine() {
+        try {
+            return new BufferedReader(new InputStreamReader(pipedInputStream)).readLine();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     public void waitForMessageThen(int timeOut, Runnable callback) {

@@ -21,7 +21,7 @@ public class RealUserShould {
         user.forward("sample line one");
         user.forward("sample line two");
 
-        assertThat(clientSocket.receivedMessage()).isEqualTo("sample line one\nsample line two\n");
+        assertThat(clientSocket.receivedMessage()).isEqualTo("sample line onesample line two");
     }
 
     @Test
@@ -53,7 +53,7 @@ public class RealUserShould {
         user.forward("sample line two");
 
         chatRoom.waitForMessageThen(1000, TimeUnit.MILLISECONDS, () -> {
-            assertThat(clientSocket.receivedMessage()).isEqualTo("sample line one\nsample line two\n");
+            assertThat(clientSocket.receivedMessage()).isEqualTo("sample line onesample line two");
             assertThat(chatRoom.receivedMessage()).isEqualTo("test message");
             assertThat(chatRoom.sentBy()).isEqualTo(user);
         });
@@ -67,7 +67,7 @@ public class RealUserShould {
 
         user.greet();
 
-        String encodedMessage = protocol.addContent("Welcome to ChattyChat\n").encodeMessage();
+        String encodedMessage = protocol.addContent("Welcome to ChattyChat").encodeMessage();
         assertThat(clientSocket.receivedMessage()).isEqualTo(encodedMessage);
     }
 
@@ -80,7 +80,7 @@ public class RealUserShould {
         Executors.newSingleThreadExecutor().submit(user::askUserName);
 
         clientSocket.waitForMessageThen(1000, () -> {
-            String encodedMessage = protocol.addContent("Please enter your name\n").encodeMessage();
+            String encodedMessage = protocol.addContent("Please enter your name").encodeMessage();
             assertThat(clientSocket.receivedMessage()).isEqualTo(encodedMessage);
         });
     }

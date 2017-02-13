@@ -1,6 +1,6 @@
 package com.andreamazzarella.chat_client;
 
 public interface LocalIO {
-    void addMessage(String message);
+    void displayMessage(String message);
     String readLine();
 }

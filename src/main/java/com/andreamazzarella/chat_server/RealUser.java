@@ -1,23 +1,15 @@
 package com.andreamazzarella.chat_server;
 
-import java.io.*;
-
 public class RealUser implements User {
 
-    private final BufferedReader clientOutputStream;
-    private final PrintStream clientInputStream;
     private final ChatProtocol protocol;
+    private final Connection userSocket;
     private Notifiable chatRoom;
     private String userName;
 
     RealUser(Connection clientSocket, ChatProtocol protocol) {
         this.protocol = protocol;
-        try {
-            clientInputStream = new PrintStream(clientSocket.getOutputStream());
-            clientOutputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        this.userSocket = clientSocket;
     }
 
     @Override
@@ -27,18 +19,14 @@ public class RealUser implements User {
 
     @Override
     public void forward(String message) {
-        clientInputStream.println(message);
+        userSocket.sendMessage(message);
     }
 
     @Override
     public void startConversation() {
         String message_received;
-        try {
-            while ((message_received = clientOutputStream.readLine()) != null) {
-                chatRoom.notifyMessageFromClient(message_received, this);
-            }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+        while ((message_received = userSocket.readLine()) != null) {
+            chatRoom.notifyMessageFromClient(message_received, this);
         }
     }
 
@@ -50,17 +38,13 @@ public class RealUser implements User {
     @Override
     public void askUserName() {
         String encodedQuestion = protocol.addContent("Please enter your name").encodeMessage();
-        clientInputStream.println(encodedQuestion);
-        try {
-            userName = clientOutputStream.readLine();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        userSocket.sendMessage(encodedQuestion);
+        userName = userSocket.readLine();
     }
 
     @Override
     public void greet() {
         String encodedGreeting = protocol.addContent("Welcome to ChattyChat").encodeMessage();
-        clientInputStream.println(encodedGreeting);
+        userSocket.sendMessage(encodedGreeting);
     }
 }

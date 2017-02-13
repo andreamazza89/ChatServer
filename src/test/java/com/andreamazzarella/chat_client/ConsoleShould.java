@@ -20,7 +20,7 @@ public class ConsoleShould {
         ChatProtocol protocol = new RealChatProtocol();
         LocalIO console = new Console(new ByteArrayInputStream("".getBytes()), consoleOutput, protocol);
 
-        console.addMessage("~userName~Andrea~messageContent~Ciao!");
+        console.displayMessage("~userName~Andrea~messageContent~Ciao!");
 
         assertThat(consoleOutput.toString()).isEqualTo("Andrea: Ciao!\n");
     }

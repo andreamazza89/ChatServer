@@ -1,27 +1,38 @@
 package com.andreamazzarella.chat_server;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketAddress;
+
 
 public class ClientConnection implements Connection {
 
     private final Socket rawClientSocket;
+    private final BufferedReader reader;
+    private final PrintStream writer;
 
     public ClientConnection(Socket rawClientSocket) {
         this.rawClientSocket = rawClientSocket;
+        try {
+            this.reader = new BufferedReader(new InputStreamReader(rawClientSocket.getInputStream()));
+            this.writer = new PrintStream(rawClientSocket.getOutputStream());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     @Override
-    public OutputStream getOutputStream() throws IOException {
-        return rawClientSocket.getOutputStream();
+    public void sendMessage(String message) {
+        writer.println(message);
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
-        return rawClientSocket.getInputStream();
+    public String readLine() {
+        try {
+            return reader.readLine();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     @Override
