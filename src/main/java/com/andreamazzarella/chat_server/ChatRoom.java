@@ -19,8 +19,8 @@ public class ChatRoom implements Notifiable {
     }
 
     @Override
-    public void notifyMessageFromClient(String rawMessage, User sender) {
-        Message message = new Message(Optional.of(sender), rawMessage);
+    public void notifyDataReceivedFromClient(String data, User sender) {
+        Message message = new Message(Optional.of(sender), data);
         repository.add(message);
 
         String encodedMessage = protocol.encodeMessage(message);

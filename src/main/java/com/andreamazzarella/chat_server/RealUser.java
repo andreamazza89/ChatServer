@@ -34,9 +34,9 @@ public class RealUser implements User {
 
     @Override
     public void startConversation() {
-        String message_received;
-        while ((message_received = userSocket.readMessage()) != null) {
-            chatRoom.notifyMessageFromClient(message_received, this);
+        String dataReceived;
+        while ((dataReceived = userSocket.readMessage()) != null) {
+            chatRoom.notifyDataReceivedFromClient(dataReceived, this);
         }
     }
 

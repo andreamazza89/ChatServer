@@ -12,7 +12,7 @@ public class FakeChatRoom implements Notifiable {
     private CountDownLatch waitForMessageNotification = new CountDownLatch(1);
 
     @Override
-    public void notifyMessageFromClient(String message, User user) {
+    public void notifyDataReceivedFromClient(String message, User user) {
         waitForMessageNotification.countDown();
 
         this.receivedMessage = message;

@@ -21,7 +21,7 @@ public class ChatRoomShould {
         chatRoom.addSubscriber(maria);
 
         Message message = new Message(Optional.of(andrea), "Hello from andrea!");
-        chatRoom.notifyMessageFromClient("Hello from andrea!", andrea);
+        chatRoom.notifyDataReceivedFromClient("Hello from andrea!", andrea);
 
         String encodedMessage = protocol.encodeMessage(message);
         assertThat(andrea.receivedMessages()).isEqualTo("");
@@ -38,9 +38,9 @@ public class ChatRoomShould {
         chatRoom.addSubscriber(maria);
 
         Message andreasMessage = new Message(Optional.of(andrea), "Hello from andrea!");
-        chatRoom.notifyMessageFromClient("Hello from andrea!", andrea);
+        chatRoom.notifyDataReceivedFromClient("Hello from andrea!", andrea);
         Message mariasMessage = new Message(Optional.of(maria), "Hello from maria!");
-        chatRoom.notifyMessageFromClient("Hello from maria!", maria);
+        chatRoom.notifyDataReceivedFromClient("Hello from maria!", maria);
 
         String encodedMessageFromAndrea = protocol.encodeMessage(andreasMessage);
         String encodedMessageFromMaria = protocol.encodeMessage(mariasMessage);
@@ -53,7 +53,7 @@ public class ChatRoomShould {
         MessageRepository repository = new InMemoryMessageRepository();
         ChatRoom chatRoom = new ChatRoom(new ChatProtocol(), repository);
 
-        chatRoom.notifyMessageFromClient("message", new FakeUser("andrea"));
+        chatRoom.notifyDataReceivedFromClient("message", new FakeUser("andrea"));
 
         Message storedMessage = repository.all().get(0);
         assertThat(storedMessage.getContent()).isEqualTo("message");
