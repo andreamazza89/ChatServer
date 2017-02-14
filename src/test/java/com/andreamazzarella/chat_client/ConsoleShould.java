@@ -31,7 +31,7 @@ public class ConsoleShould {
 
         console.sendMessage(encodedMessage);
 
-        assertThat(consoleOutput.toString()).isEqualTo("Andrea: Ciao!\n");
+        assertThat(consoleOutput.toString()).isEqualTo("\u001B[34mAndrea\u001B[0m: Ciao!\n");
     }
 
 

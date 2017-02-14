@@ -35,7 +35,7 @@ public class Console implements MessageExchange {
         if (userName.equals("")) {
             return content;
         } else {
-            return userName + ": " + content;
+            return makeBlue(userName) + ": " + content;
         }
     }
 
@@ -46,5 +46,9 @@ public class Console implements MessageExchange {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    private String makeBlue(String text){
+        return "\u001B[34m" + text + "\u001B[0m";
     }
 }
