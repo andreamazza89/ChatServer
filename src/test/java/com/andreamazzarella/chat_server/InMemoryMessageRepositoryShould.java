@@ -5,6 +5,7 @@ import com.andreamazzarella.support.FakeUser;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -20,7 +21,7 @@ public class InMemoryMessageRepositoryShould {
     @Test
     public void storeAMessage() {
         User andrea = new FakeUser("Andrea");
-        Message message = new Message(andrea, "ciao da Roma");
+        Message message = new Message(Optional.of(andrea), "ciao da Roma");
         MessageRepository repository = new InMemoryMessageRepository();
 
         repository.add(message);
@@ -34,8 +35,8 @@ public class InMemoryMessageRepositoryShould {
     public void storeTwoMessages() {
         User andrea = new FakeUser("Andrea");
         User maria = new FakeUser("Maria");
-        Message firstMessage = new Message(andrea, "ciao da Roma");
-        Message secondMessage = new Message(maria, "hey there");
+        Message firstMessage = new Message(Optional.of(andrea), "ciao da Roma");
+        Message secondMessage = new Message(Optional.of(maria), "hey there");
         MessageRepository repository = new InMemoryMessageRepository();
 
         repository.add(firstMessage);

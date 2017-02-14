@@ -2,11 +2,13 @@ package com.andreamazzarella.chat_server;
 
 import com.andreamazzarella.chat_application.ChatProtocol;
 import com.andreamazzarella.chat_application.ChatProtocol;
+import com.andreamazzarella.chat_application.Message;
 import com.andreamazzarella.support.FakeChatRoom;
 import com.andreamazzarella.support.FakeMessageExchange;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -66,10 +68,11 @@ public class RealUserShould {
         FakeMessageExchange clientSocket = new FakeMessageExchange();
         ChatProtocol protocol = new ChatProtocol();
         User user = new RealUser(clientSocket, protocol);
+        Message greetingMessage = new Message(Optional.empty(), "Welcome to ChattyChat");
 
         user.greet();
 
-        String encodedMessage = protocol.addContent("Welcome to ChattyChat").encodeMessage();
+        String encodedMessage = protocol.encodeMessage(greetingMessage);
         assertThat(clientSocket.receivedMessage()).isEqualTo(encodedMessage);
     }
 
@@ -78,11 +81,12 @@ public class RealUserShould {
         FakeMessageExchange clientSocket = new FakeMessageExchange();
         ChatProtocol protocol = new ChatProtocol();
         User user = new RealUser(clientSocket, protocol);
+        Message askNameMessage = new Message(Optional.empty(), "Please enter your name");
 
         Executors.newSingleThreadExecutor().submit(user::askUserName);
 
         clientSocket.waitForMessageThen(1000, () -> {
-            String encodedMessage = protocol.addContent("Please enter your name").encodeMessage();
+            String encodedMessage = protocol.encodeMessage(askNameMessage);
             assertThat(clientSocket.receivedMessage()).isEqualTo(encodedMessage);
         });
     }

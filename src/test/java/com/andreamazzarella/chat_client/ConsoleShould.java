@@ -1,12 +1,15 @@
 package com.andreamazzarella.chat_client;
 
+import com.andreamazzarella.chat_application.Message;
 import com.andreamazzarella.chat_application.MessageExchange;
 import com.andreamazzarella.chat_application.ChatProtocol;
+import com.andreamazzarella.chat_server.User;
 import com.andreamazzarella.support.FakeUser;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -21,8 +24,9 @@ public class ConsoleShould {
     public void FormatANDPrintAMessageWithUserAndContent() {
         ByteArrayOutputStream consoleOutput = new ByteArrayOutputStream();
         ChatProtocol protocol = new ChatProtocol();
-        FakeUser andrea = new FakeUser("Andrea");
-        String encodedMessage = protocol.messageFrom(andrea).addContent("Ciao!").encodeMessage();
+        User andrea = new FakeUser("Andrea");
+        Message messageWithUserAndContent = new Message(Optional.of(andrea), "Ciao!");
+        String encodedMessage = protocol.encodeMessage(messageWithUserAndContent);
         MessageExchange console = new Console(new ByteArrayInputStream("".getBytes()), consoleOutput, protocol);
 
         console.sendMessage(encodedMessage);
@@ -35,7 +39,8 @@ public class ConsoleShould {
     public void FormatANDPrintAMessageWithContentOnly() {
         ByteArrayOutputStream consoleOutput = new ByteArrayOutputStream();
         ChatProtocol protocol = new ChatProtocol();
-        String encodedMessage = protocol.addContent("This is a message with no user name").encodeMessage();
+        Message messageWithContentOnly = new Message(Optional.empty(), "This is a message with no user name");
+        String encodedMessage = protocol.encodeMessage(messageWithContentOnly);
         MessageExchange console = new Console(new ByteArrayInputStream("".getBytes()), consoleOutput, protocol);
 
         console.sendMessage(encodedMessage);

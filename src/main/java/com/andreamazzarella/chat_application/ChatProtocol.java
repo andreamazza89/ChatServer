@@ -1,7 +1,5 @@
 package com.andreamazzarella.chat_application;
 
-import com.andreamazzarella.chat_server.User;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,42 +8,19 @@ public class ChatProtocol {
     private final static String FLAG_ANCHOR = "~";
     private final static String USERNAME_FLAG = FLAG_ANCHOR + "userName" + FLAG_ANCHOR;
     private final static String MESSAGE_CONTENT_FLAG = FLAG_ANCHOR + "messageContent" + FLAG_ANCHOR;
-    private final static String EMPTY_FIELD_FLAG = "";
 
-    private String messageContent = "";
-    private String userName = "";
-
-    public ChatProtocol messageFrom(User user) {
-        this.userName = user.getUserName();
-        return this;
-    }
-
-    public ChatProtocol addContent(String content) {
-        this.messageContent = content;
-        return this;
-    }
-
-    public String encodeMessage() {
-        String userName = encodeUserName();
-        String messageContent = encodeMessageContent();
-
-        resetFields();
-
+    public String encodeMessage(Message message) {
+        String userName = encodeUserName(message);
+        String messageContent = encodeMessageContent(message);
         return userName + messageContent;
     }
 
-    private void resetFields() {
-        messageContent = EMPTY_FIELD_FLAG;
-        userName = EMPTY_FIELD_FLAG;
+    private String encodeMessageContent(Message message) {
+        return MESSAGE_CONTENT_FLAG + message.getContent();
     }
 
-    private String encodeMessageContent() {
-        return MESSAGE_CONTENT_FLAG + messageContent;
-    }
-
-
-    private String encodeUserName() {
-        return USERNAME_FLAG + userName;
+    private String encodeUserName(Message message) {
+        return USERNAME_FLAG + message.getUser().getUserName();  // Demeter?
     }
 
     public String decodeUserName(String encodedMessage) {
