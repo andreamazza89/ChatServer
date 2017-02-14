@@ -3,7 +3,6 @@ package com.andreamazzarella.chat_server;
 import com.andreamazzarella.chat_application.ChatProtocol;
 import com.andreamazzarella.chat_application.Message;
 import com.andreamazzarella.support.FakeUser;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -13,7 +12,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 public class ChatRoomShould {
 
     @Test
-    public void encodeMessageAndPassToAllClientsButTheOneWhoSentIt() {
+    public void passMessageToAllClientsButTheOneWhoSentIt() {
         ChatProtocol protocol = new ChatProtocol();
         ChatRoom chatRoom = new ChatRoom(protocol, new InMemoryMessageRepository());
         FakeUser andrea = new FakeUser("andrea");
@@ -30,7 +29,7 @@ public class ChatRoomShould {
     }
 
     @Test
-    public void passMessagesToAllClientsButTheOneWhoSentIt() {
+    public void passMultipleMessagesToMultipleClients() {
         ChatProtocol protocol = new ChatProtocol();
         ChatRoom chatRoom = new ChatRoom(protocol, new InMemoryMessageRepository());
         FakeUser andrea = new FakeUser("andrea");
