@@ -1,5 +1,7 @@
 package com.andreamazzarella.chat_application;
 
+import com.andreamazzarella.chat_server.Message;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

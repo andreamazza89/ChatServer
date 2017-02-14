@@ -1,6 +1,6 @@
 package com.andreamazzarella.chat_client;
 
-import com.andreamazzarella.chat_application.Message;
+import com.andreamazzarella.chat_server.Message;
 import com.andreamazzarella.chat_application.MessageExchange;
 import com.andreamazzarella.chat_application.ChatProtocol;
 import com.andreamazzarella.chat_server.User;

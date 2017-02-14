@@ -1,5 +1,6 @@
 package com.andreamazzarella.chat_application;
 
+import com.andreamazzarella.chat_server.Message;
 import com.andreamazzarella.chat_server.User;
 import com.andreamazzarella.support.FakeUser;
 import org.junit.Test;

@@ -1,7 +1,4 @@
-package com.andreamazzarella.chat_application;
-
-import com.andreamazzarella.chat_server.NullUser;
-import com.andreamazzarella.chat_server.User;
+package com.andreamazzarella.chat_server;
 
 import java.util.Optional;
 
