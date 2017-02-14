@@ -4,19 +4,25 @@ import com.andreamazzarella.chat_application.ChatProtocol;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ChatRoom implements Notifiable {
 
     private final ChatProtocol protocol;
+    private final MessageRepository repository;
     private List<User> usersSubscribedToRoom = new ArrayList<>();
 
-    ChatRoom(ChatProtocol protocol) {
+    public ChatRoom(ChatProtocol protocol, MessageRepository repository) {
         this.protocol = protocol;
+        this.repository = repository;
     }
 
     @Override
-    public void notifyMessageFromClient(String rawMessage, User sender) {
-        String encodedMessage = protocol.messageFrom(sender).addContent(rawMessage).encodeMessage();
+    public void notifyDataReceivedFromClient(String data, User sender) {
+        Message message = new Message(Optional.of(sender), data);
+        repository.add(message);
+
+        String encodedMessage = protocol.encodeMessage(message);
         for (User user : usersSubscribedToRoom) {
             if (user != sender) {
                 user.forward(encodedMessage);
@@ -28,5 +34,10 @@ public class ChatRoom implements Notifiable {
     public void addSubscriber(User user) {
         usersSubscribedToRoom.add(user);
         user.subscribeToRoom(this);
+
+        List<Message> messageHistory = repository.all();
+        for (Message message : messageHistory) {
+            user.forward(protocol.encodeMessage(message));
+        }
     }
 }

@@ -1,9 +1,15 @@
 package com.andreamazzarella.chat_client;
 
-import com.andreamazzarella.chat_application.MessageExchange;
 import com.andreamazzarella.chat_application.ChatProtocol;
+import com.andreamazzarella.chat_application.MessageExchange;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.UncheckedIOException;
 
 public class Console implements MessageExchange {
 
@@ -29,7 +35,7 @@ public class Console implements MessageExchange {
         if (userName.equals("")) {
             return content;
         } else {
-            return userName + ": " + content;
+            return makeBlue(userName) + ": " + content;
         }
     }
 
@@ -40,5 +46,9 @@ public class Console implements MessageExchange {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    private String makeBlue(String text){
+        return "\u001B[34m" + text + "\u001B[0m";
     }
 }

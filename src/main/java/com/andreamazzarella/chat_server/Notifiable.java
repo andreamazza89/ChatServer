@@ -1,6 +1,6 @@
 package com.andreamazzarella.chat_server;
 
 public interface Notifiable {
-    void notifyMessageFromClient(String message, User user);
+    void notifyDataReceivedFromClient(String data, User user);
     void addSubscriber(User user);
 }

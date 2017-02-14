@@ -6,7 +6,7 @@ import com.andreamazzarella.chat_server.User;
 public class FakeUser implements User {
 
     private String userName;
-    private String receivedMessage = "";
+    private String receivedMessages = "";
     private boolean subscribeToRoomWasCalled;
     private Notifiable subscribeToRoomWasCalledWith;
 
@@ -24,7 +24,7 @@ public class FakeUser implements User {
 
     @Override
     public void forward(String message) {
-        receivedMessage = message;
+        receivedMessages += message;
     }
 
     @Override
@@ -42,8 +42,8 @@ public class FakeUser implements User {
         return userName;
     }
 
-    public String receivedMessage() {
-        return receivedMessage;
+    public String receivedMessages() {
+        return receivedMessages;
     }
 
     public boolean subscribeToRoomWasCalled() {

@@ -3,6 +3,8 @@ package com.andreamazzarella.chat_server;
 import com.andreamazzarella.chat_application.ChatProtocol;
 import com.andreamazzarella.chat_application.MessageExchange;
 
+import java.util.Optional;
+
 public class RealUser implements User {
 
     private final static String GREETING = "Welcome to ChattyChat";
@@ -31,9 +33,9 @@ public class RealUser implements User {
 
     @Override
     public void startConversation() {
-        String message_received;
-        while ((message_received = userSocket.readMessage()) != null) {
-            chatRoom.notifyMessageFromClient(message_received, this);
+        String dataReceived;
+        while ((dataReceived = userSocket.readMessage()) != null) {
+            chatRoom.notifyDataReceivedFromClient(dataReceived, this);
         }
     }
 
@@ -44,14 +46,16 @@ public class RealUser implements User {
 
     @Override
     public void askUserName() {
-        String encodedQuestion = protocol.addContent(ASK_FOR_NAME).encodeMessage();
+        Message askNameMessage = new Message(Optional.empty(), ASK_FOR_NAME);
+        String encodedQuestion = protocol.encodeMessage(askNameMessage);
         userSocket.sendMessage(encodedQuestion);
         userName = userSocket.readMessage();
     }
 
     @Override
     public void greet() {
-        String encodedGreeting = protocol.addContent(GREETING).encodeMessage();
+        Message greetingMessage = new Message(Optional.empty(), GREETING);
+        String encodedGreeting = protocol.encodeMessage(greetingMessage);
         userSocket.sendMessage(encodedGreeting);
     }
 }
