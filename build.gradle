@@ -22,6 +22,7 @@ jar {
     }
     include 'com/andreamazzarella/chat_server/**'
     include 'com/andreamazzarella/chat_application/**'
+    baseName = 'serverJar'
 }
 
 task clientJar(type: Jar) {
