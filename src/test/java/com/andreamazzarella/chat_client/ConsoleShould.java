@@ -1,7 +1,7 @@
 package com.andreamazzarella.chat_client;
 
 import com.andreamazzarella.chat_server.Message;
-import com.andreamazzarella.chat_application.MessageExchange;
+import com.andreamazzarella.chat_application.DataExchange;
 import com.andreamazzarella.chat_application.ChatProtocol;
 import com.andreamazzarella.chat_server.User;
 import com.andreamazzarella.support.FakeUser;
@@ -27,9 +27,9 @@ public class ConsoleShould {
         User andrea = new FakeUser("Andrea");
         Message messageWithUserAndContent = new Message(Optional.of(andrea), "Ciao!");
         String encodedMessage = protocol.encodeMessage(messageWithUserAndContent);
-        MessageExchange console = new Console(new ByteArrayInputStream("".getBytes()), consoleOutput, protocol);
+        DataExchange console = new Console(new ByteArrayInputStream("".getBytes()), consoleOutput, protocol);
 
-        console.sendMessage(encodedMessage);
+        console.sendData(encodedMessage);
 
         assertThat(consoleOutput.toString()).isEqualTo("\u001B[34mAndrea\u001B[0m: Ciao!\n");
     }
@@ -41,9 +41,9 @@ public class ConsoleShould {
         ChatProtocol protocol = new ChatProtocol();
         Message messageWithContentOnly = new Message(Optional.empty(), "This is a message with no user name");
         String encodedMessage = protocol.encodeMessage(messageWithContentOnly);
-        MessageExchange console = new Console(new ByteArrayInputStream("".getBytes()), consoleOutput, protocol);
+        DataExchange console = new Console(new ByteArrayInputStream("".getBytes()), consoleOutput, protocol);
 
-        console.sendMessage(encodedMessage);
+        console.sendData(encodedMessage);
 
         assertThat(consoleOutput.toString()).isEqualTo("This is a message with no user name\n");
     }

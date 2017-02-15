@@ -1,6 +1,6 @@
 package com.andreamazzarella.support;
 
-import com.andreamazzarella.chat_application.MessageExchange;
+import com.andreamazzarella.chat_application.DataExchange;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -14,7 +14,7 @@ import java.io.UncheckedIOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class FakeMessageExchange implements MessageExchange {
+public class FakeMessageExchange implements DataExchange {
 
     private BufferedReader input;
     private PipedOutputStream pipedOutputStream;
@@ -33,13 +33,13 @@ public class FakeMessageExchange implements MessageExchange {
     }
 
     @Override
-    public void sendMessage(String message) {
-        new PrintStream(outputStream).print(message);
+    public void sendData(String data) {
+        new PrintStream(outputStream).print(data);
         waitForMessage.countDown();
     }
 
     @Override
-    public String readMessage() {
+    public String readData() {
         try {
             return input.readLine();
         } catch (IOException e) {

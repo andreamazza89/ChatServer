@@ -7,7 +7,7 @@ import java.io.PrintStream;
 import java.io.UncheckedIOException;
 import java.net.Socket;
 
-public class ClientConnection implements MessageExchange {
+public class ClientConnection implements DataExchange {
 
     private final BufferedReader reader;
     private final PrintStream writer;
@@ -22,12 +22,12 @@ public class ClientConnection implements MessageExchange {
     }
 
     @Override
-    public void sendMessage(String message) {
-        writer.println(message);
+    public void sendData(String data) {
+        writer.println(data);
     }
 
     @Override
-    public String readMessage() {
+    public String readData() {
         try {
             return reader.readLine();
         } catch (IOException e) {

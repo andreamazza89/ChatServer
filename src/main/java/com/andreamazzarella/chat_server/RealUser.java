@@ -1,7 +1,7 @@
 package com.andreamazzarella.chat_server;
 
 import com.andreamazzarella.chat_application.ChatProtocol;
-import com.andreamazzarella.chat_application.MessageExchange;
+import com.andreamazzarella.chat_application.DataExchange;
 
 import java.util.Optional;
 
@@ -11,12 +11,12 @@ public class RealUser implements User {
     private final static String ASK_FOR_NAME = "Please enter your name";
 
     private final ChatProtocol protocol;
-    private final MessageExchange userSocket;
+    private final DataExchange userSocket;
     private Notifiable chatRoom;
 
     private String userName;
 
-    RealUser(MessageExchange clientSocket, ChatProtocol protocol) {
+    RealUser(DataExchange clientSocket, ChatProtocol protocol) {
         this.protocol = protocol;
         this.userSocket = clientSocket;
     }
@@ -28,13 +28,13 @@ public class RealUser implements User {
 
     @Override
     public void forward(String message) {
-        userSocket.sendMessage(message);
+        userSocket.sendData(message);
     }
 
     @Override
     public void startConversation() {
         String dataReceived;
-        while ((dataReceived = userSocket.readMessage()) != null) {
+        while ((dataReceived = userSocket.readData()) != null) {
             chatRoom.notifyDataReceivedFromClient(dataReceived, this);
         }
     }
@@ -48,14 +48,14 @@ public class RealUser implements User {
     public void askUserName() {
         Message askNameMessage = new Message(Optional.empty(), ASK_FOR_NAME);
         String encodedQuestion = protocol.encodeMessage(askNameMessage);
-        userSocket.sendMessage(encodedQuestion);
-        userName = userSocket.readMessage();
+        userSocket.sendData(encodedQuestion);
+        userName = userSocket.readData();
     }
 
     @Override
     public void greet() {
         Message greetingMessage = new Message(Optional.empty(), GREETING);
         String encodedGreeting = protocol.encodeMessage(greetingMessage);
-        userSocket.sendMessage(encodedGreeting);
+        userSocket.sendData(encodedGreeting);
     }
 }

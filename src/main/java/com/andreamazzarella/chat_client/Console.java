@@ -1,7 +1,7 @@
 package com.andreamazzarella.chat_client;
 
 import com.andreamazzarella.chat_application.ChatProtocol;
-import com.andreamazzarella.chat_application.MessageExchange;
+import com.andreamazzarella.chat_application.DataExchange;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UncheckedIOException;
 
-public class Console implements MessageExchange {
+public class Console implements DataExchange {
 
     private final BufferedReader localInput;
     private final PrintStream localOutput;
@@ -24,9 +24,9 @@ public class Console implements MessageExchange {
     }
 
     @Override
-    public void sendMessage(String rawMessage) {
-        String userName = protocol.decodeUserName(rawMessage);
-        String content = protocol.decodeMessageContent(rawMessage);
+    public void sendData(String data) {
+        String userName = protocol.decodeUserName(data);
+        String content = protocol.decodeMessageContent(data);
         String formattedOutput = prettyPrint(userName, content);
         localOutput.println(formattedOutput);
     }
@@ -40,7 +40,7 @@ public class Console implements MessageExchange {
     }
 
     @Override
-    public String readMessage() {
+    public String readData() {
         try {
             return localInput.readLine();
         } catch (IOException e) {

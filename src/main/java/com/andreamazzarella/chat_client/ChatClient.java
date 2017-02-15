@@ -1,15 +1,15 @@
 package com.andreamazzarella.chat_client;
 
-import com.andreamazzarella.chat_application.MessageExchange;
+import com.andreamazzarella.chat_application.DataExchange;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 class ChatClient {
-    private final MessageExchange localIO;
-    private final MessageExchange remoteSocket;
+    private final DataExchange localIO;
+    private final DataExchange remoteSocket;
 
-    ChatClient(MessageExchange localIO, MessageExchange remoteSocket) {
+    ChatClient(DataExchange localIO, DataExchange remoteSocket) {
        this.localIO = localIO;
        this.remoteSocket = remoteSocket;
     }
@@ -21,10 +21,10 @@ class ChatClient {
         sendReceivePool.submit(() -> pipeMessages(remoteSocket, localIO));
     }
 
-    private void pipeMessages(MessageExchange from, MessageExchange to) {
+    private void pipeMessages(DataExchange from, DataExchange to) {
         String messageReceived;
-        while ((messageReceived = from.readMessage()) != null) {
-            to.sendMessage(messageReceived);
+        while ((messageReceived = from.readData()) != null) {
+            to.sendData(messageReceived);
         }
     }
 }

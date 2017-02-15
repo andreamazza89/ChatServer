@@ -1,6 +1,6 @@
 package com.andreamazzarella.chat_client;
 
-import com.andreamazzarella.chat_application.MessageExchange;
+import com.andreamazzarella.chat_application.DataExchange;
 import com.andreamazzarella.chat_application.ClientConnection;
 import com.andreamazzarella.chat_application.ChatProtocol;
 
@@ -22,8 +22,8 @@ public class Main {
         }
         System.out.println("Connected to server!");
 
-        MessageExchange connection = new ClientConnection(rawSocket);
-        MessageExchange localIO = new Console(System.in, System.out, new ChatProtocol());
+        DataExchange connection = new ClientConnection(rawSocket);
+        DataExchange localIO = new Console(System.in, System.out, new ChatProtocol());
 
         new ChatClient(localIO, connection).startCommunication();
     }
