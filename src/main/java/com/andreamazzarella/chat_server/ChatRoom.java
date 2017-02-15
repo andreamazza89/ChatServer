@@ -12,14 +12,14 @@ public class ChatRoom implements Notifiable {
     private final MessageRepository repository;
     private List<User> usersSubscribedToRoom = new ArrayList<>();
 
-    public ChatRoom(ChatProtocol protocol, MessageRepository repository) {
+    ChatRoom(ChatProtocol protocol, MessageRepository repository) {
         this.protocol = protocol;
         this.repository = repository;
     }
 
     @Override
     public void notifyDataReceivedFromClient(String data, User sender) {
-        Message message = new Message(Optional.of(sender), data);
+        Message message = new Message(Optional.of(sender.getUserName()), data);
         repository.add(message);
 
         String encodedMessage = protocol.encodeMessage(message);
@@ -36,7 +36,7 @@ public class ChatRoom implements Notifiable {
         user.subscribeToRoom(this);
 
         List<Message> messageHistory = repository.all();
-        for (Message message : messageHistory) {
+        for (Message message : messageHistory) { // this solution is not sustainable but the easiest to implement at this stage
             user.forward(protocol.encodeMessage(message));
         }
     }

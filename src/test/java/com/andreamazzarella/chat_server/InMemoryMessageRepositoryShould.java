@@ -1,6 +1,5 @@
 package com.andreamazzarella.chat_server;
 
-import com.andreamazzarella.support.FakeUser;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -19,23 +18,20 @@ public class InMemoryMessageRepositoryShould {
 
     @Test
     public void storeAMessage() {
-        User andrea = new FakeUser("Andrea");
-        Message message = new Message(Optional.of(andrea), "ciao da Roma");
+        Message message = new Message(Optional.of("Andrea"), "ciao da Roma");
         MessageRepository repository = new InMemoryMessageRepository();
 
         repository.add(message);
 
         Message storedMessage = repository.all().get(0);
         assertThat(storedMessage.getContent()).isEqualTo("ciao da Roma");
-        assertThat(storedMessage.getUser().getUserName()).isEqualTo("Andrea");
+        assertThat(storedMessage.getUserName()).isEqualTo(Optional.of("Andrea"));
     }
 
     @Test
     public void storeTwoMessages() {
-        User andrea = new FakeUser("Andrea");
-        User maria = new FakeUser("Maria");
-        Message firstMessage = new Message(Optional.of(andrea), "ciao da Roma");
-        Message secondMessage = new Message(Optional.of(maria), "hey there");
+        Message firstMessage = new Message(Optional.of("Andrea"), "ciao da Roma");
+        Message secondMessage = new Message(Optional.of("Maria"), "hey there");
         MessageRepository repository = new InMemoryMessageRepository();
 
         repository.add(firstMessage);
@@ -43,11 +39,11 @@ public class InMemoryMessageRepositoryShould {
 
         Message storedMessageOne = repository.all().get(0);
         assertThat(storedMessageOne.getContent()).isEqualTo("ciao da Roma");
-        assertThat(storedMessageOne.getUser().getUserName()).isEqualTo("Andrea");
+        assertThat(storedMessageOne.getUserName()).isEqualTo(Optional.of("Andrea"));
 
         Message storedMessageTwo = repository.all().get(1);
         assertThat(storedMessageTwo.getContent()).isEqualTo("hey there");
-        assertThat(storedMessageTwo.getUser().getUserName()).isEqualTo("Maria");
+        assertThat(storedMessageTwo.getUserName()).isEqualTo(Optional.of("Maria"));
     }
 
 }
