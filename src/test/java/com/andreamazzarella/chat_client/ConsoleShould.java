@@ -3,8 +3,6 @@ package com.andreamazzarella.chat_client;
 import com.andreamazzarella.chat_server.Message;
 import com.andreamazzarella.chat_application.DataExchange;
 import com.andreamazzarella.chat_application.ChatProtocol;
-import com.andreamazzarella.chat_server.User;
-import com.andreamazzarella.support.FakeUser;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -24,8 +22,7 @@ public class ConsoleShould {
     public void FormatANDPrintAMessageWithUserAndContent() {
         ByteArrayOutputStream consoleOutput = new ByteArrayOutputStream();
         ChatProtocol protocol = new ChatProtocol();
-        User andrea = new FakeUser("Andrea");
-        Message messageWithUserAndContent = new Message(Optional.of(andrea), "Ciao!");
+        Message messageWithUserAndContent = new Message(Optional.of("Andrea"), "Ciao!");
         String encodedMessage = protocol.encodeMessage(messageWithUserAndContent);
         DataExchange console = new Console(new ByteArrayInputStream("".getBytes()), consoleOutput, protocol);
 

@@ -19,7 +19,7 @@ public class ChatRoomShould {
         chatRoom.addSubscriber(andrea);
         chatRoom.addSubscriber(maria);
 
-        Message message = new Message(Optional.of(andrea), "Hello from andrea!");
+        Message message = new Message(Optional.of("andrea"), "Hello from andrea!");
         chatRoom.notifyDataReceivedFromClient("Hello from andrea!", andrea);
 
         String encodedMessage = protocol.encodeMessage(message);
@@ -36,9 +36,9 @@ public class ChatRoomShould {
         chatRoom.addSubscriber(andrea);
         chatRoom.addSubscriber(maria);
 
-        Message andreasMessage = new Message(Optional.of(andrea), "Hello from andrea!");
+        Message andreasMessage = new Message(Optional.of("andrea"), "Hello from andrea!");
         chatRoom.notifyDataReceivedFromClient("Hello from andrea!", andrea);
-        Message mariasMessage = new Message(Optional.of(maria), "Hello from maria!");
+        Message mariasMessage = new Message(Optional.of("maria"), "Hello from maria!");
         chatRoom.notifyDataReceivedFromClient("Hello from maria!", maria);
 
         String encodedMessageFromAndrea = protocol.encodeMessage(andreasMessage);
@@ -56,7 +56,7 @@ public class ChatRoomShould {
 
         Message storedMessage = repository.all().get(0);
         assertThat(storedMessage.getContent()).isEqualTo("message");
-        assertThat(storedMessage.getUser().getUserName()).isEqualTo("andrea");
+        assertThat(storedMessage.getUserName()).isEqualTo(Optional.of("andrea"));
     }
 
     @Test
@@ -76,8 +76,8 @@ public class ChatRoomShould {
         ChatProtocol protocol = new ChatProtocol();
         ChatRoom chatRoom = new ChatRoom(protocol, repository);
         FakeUser andrea = new FakeUser("andrea");
-        Message messageOne = new Message(Optional.of(andrea), "hello there");
-        Message messageTwo = new Message(Optional.of(andrea), "awkward, no one is here!");
+        Message messageOne = new Message(Optional.of("andrea"), "hello there");
+        Message messageTwo = new Message(Optional.of("andrea"), "awkward, no one is here!");
         repository.add(messageOne);
         repository.add(messageTwo);
 

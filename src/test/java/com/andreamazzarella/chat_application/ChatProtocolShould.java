@@ -25,16 +25,15 @@ public class ChatProtocolShould {
     public void encodeAMessageWithUserAndContent() {
         User gigi = new FakeUser("Gigi Sabani");
         ChatProtocol protocol = new ChatProtocol();
-        Message message = new Message(Optional.of(gigi), "Ciao da Napoli");
+        Message message = new Message(Optional.of("Gigi Sabani"), "Ciao da Napoli");
 
         assertThat(protocol.encodeMessage(message)).isEqualTo("~userName~Gigi Sabani~messageContent~Ciao da Napoli");
     }
 
     @Test
     public void decodeUserName() {
-        User gigi = new FakeUser("Gigi Sabani");
         ChatProtocol protocol = new ChatProtocol();
-        Message message = new Message(Optional.of(gigi), "Ciao da Napoli");
+        Message message = new Message(Optional.of("Gigi Sabani"), "Ciao da Napoli");
 
         String encodedMessage = protocol.encodeMessage(message);
 
@@ -43,9 +42,8 @@ public class ChatProtocolShould {
 
     @Test
     public void decodeMessageContent() {
-        User gigi = new FakeUser("Gigi Sabani");
         ChatProtocol protocol = new ChatProtocol();
-        Message message = new Message(Optional.of(gigi), "Ciao da Napoli");
+        Message message = new Message(Optional.of("Gigi Sabani"), "Ciao da Napoli");
 
         String encodedMessage = protocol.encodeMessage(message);
 

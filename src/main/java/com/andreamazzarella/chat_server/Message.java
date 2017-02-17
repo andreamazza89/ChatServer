@@ -3,11 +3,11 @@ package com.andreamazzarella.chat_server;
 import java.util.Optional;
 
 public class Message {
-    private final Optional<User> user;
-    private String content;
+    private final Optional<String> userName;
+    private final String content;
 
-    public Message(Optional<User> user, String content) {
-        this.user = user;
+    public Message(Optional<String> userName, String content) {
+        this.userName = userName;
         this.content = content;
     }
 
@@ -15,7 +15,7 @@ public class Message {
         return content;
     }
 
-    public User getUser() {
-        return user.orElse(new NullUser());
+    public Optional<String> getUserName() {
+        return userName;
     }
 }

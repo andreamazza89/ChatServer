@@ -22,7 +22,7 @@ public class ChatProtocol {
     }
 
     private String encodeUserName(Message message) {
-        return USERNAME_FLAG + message.getUser().getUserName();  // Demeter?
+        return USERNAME_FLAG + message.getUserName().orElse("");  // Demeter?
     }
 
     public String decodeUserName(String encodedMessage) {
