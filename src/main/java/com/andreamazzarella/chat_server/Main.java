@@ -14,7 +14,7 @@ public class Main {
 
     public static void main(String[] args) {
         int portNumber = Integer.parseInt(args[0]);
-        ChatRoom chatRoom = new ChatRoom(new ChatProtocol(), new SQLMessageRepository());
+        ChatRoom chatRoom = new ChatRoom(new ChatProtocol(), new InMemoryMessageRepository());
 
         start(chatRoom, portNumber);
     }

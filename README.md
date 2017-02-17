@@ -21,3 +21,15 @@ To start chatting without the Client application you can use NetCat, like so:
 - Open a client connection to the server `nc localhost|server_ip_address 1234`
 - Open at least another client connection.
 - Have a chat.
+
+## Note on persistent message history storage
+
+By default, the application uses an in-memory repository to store message history, which means this is lost when the
+server is shut down. An alternative that uses PostgreSQL exists; this is the `SQLMessageRepository` class, which can be
+swapped with the `InMemoryMessageRepository` inside the ChatServer `Main` class.
+Please notice that this is not very flexible at this stage, and it requires the following in order to work:
+
+- A PostgreSQL server running on localhost:5432
+- The user with userName `Andrea` and no password to access the server
+- A database called `chat_server`
+- A table called `messages`, with the following columns: text:content, text:username
